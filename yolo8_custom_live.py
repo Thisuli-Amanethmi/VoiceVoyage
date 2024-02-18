@@ -1,3 +1,5 @@
+import os
+
 from ultralytics import YOLO
 
 model = YOLO('voiceVoyage_8_best.pt')
@@ -20,5 +22,10 @@ results = model(source=0, show=True, conf=0.6, save=True, save_crop=True, projec
 # results12 = model.predict(source='test_images/livingroom_4.jpg', show=True, conf=0.6, save=True)
 
 
-
+def list_subdir(directory):
+    subdirectories = []
+    for entry in os.listdir(directory):
+        if os.path.isdir(os.path.join(directory, entry)):
+            subdirectories.append(entry)
+    return subdirectories
 
