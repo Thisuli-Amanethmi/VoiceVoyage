@@ -29,3 +29,5 @@ def list_subdir(directory):
             subdirectories.append(entry)
     return subdirectories
 
+print("Hi")
+
