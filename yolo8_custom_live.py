@@ -2,7 +2,7 @@ import os
 
 from ultralytics import YOLO
 
-model = YOLO('voiceVoyage_8_best.pt')
+model = YOLO('voiceVoyage_version8_best.pt')
 
 results = model(source=0, show=True, conf=0.6, save=True, save_crop=True, project='runs/detect', name='inference', exist_ok=True)
 # source=0 laptop cam
@@ -29,5 +29,5 @@ def list_subdir(directory):
             subdirectories.append(entry)
     return subdirectories
 
-print("Hi")
+
 
