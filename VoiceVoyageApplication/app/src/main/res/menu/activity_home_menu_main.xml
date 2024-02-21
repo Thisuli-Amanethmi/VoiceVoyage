@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_start_navigation"
+        android:title="Start Navigation" />
+    <item
+        android:id="@+id/action_enter_house_layout"
+        android:title="Enter House Layout" />
+    <item
+        android:id="@+id/action_settings"
+        android:title="Settings" />
+</menu>
