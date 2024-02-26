@@ -31,7 +31,7 @@ public class activityRegister extends AppCompatActivity {
                 String password = editTextPassword.getText().toString();
 
                 // Pass the data to the next activity
-                Intent intent = new Intent(activityRegister.this, activityHouseDescription.class);
+                Intent intent = new Intent(activityRegister.this, activityHouseDescriptionOne.class);
                 intent.putExtra("USER_NAME", userName);
                 intent.putExtra("EMAIL_ADDRESS", emailAddress);
                 intent.putExtra("PASSWORD", password);

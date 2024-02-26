@@ -21,9 +21,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activityHouseDescription">
+        <activity android:name=".activityHouseDescriptionOne"> </activity>
 
-        </activity>
+        <activity android:name=".activityHouseDescriptionTwo"> </activity>
+
+        <activity android:name=".activityInstructions"> </activity>
 
     </application>
 
