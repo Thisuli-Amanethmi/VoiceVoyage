@@ -7,40 +7,38 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class activityHouseDescriptionTwo extends AppCompatActivity {
-    Button nextButton, previousButton;
-
+public class activityHouseDescriptionThree extends AppCompatActivity {
+    Button previousButton, submitButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_house_description_two);
+        setContentView(R.layout.activity_house_description_three);
 
         // Initialize views
         previousButton = findViewById(R.id.previous_button);
-        nextButton = findViewById(R.id.next_button);
+        submitButton = findViewById(R.id.submit_button);
 
         // Handle submit button click
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Pass the data to the next activity
-                Intent intent = new Intent(activityHouseDescriptionTwo.this, activityHouseDescriptionThree.class);
-
-                // Start the next activity
-                startActivity(intent);
-            }
-        });
-
         previousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Pass the data to the next activity
-                Intent intent = new Intent(activityHouseDescriptionTwo.this, activityHouseDescriptionOne.class);
+                Intent intent = new Intent(activityHouseDescriptionThree.this, activityHouseDescriptionTwo.class);
 
                 // Start the next activity
                 startActivity(intent);
             }
         });
-    }
 
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Pass the data to the next activity
+                // Intent intent = new Intent(activityHouseDescriptionThree.this, activityHouseLayout.class);
+
+                // Start the next activity
+                // startActivity(intent);
+            }
+        });
+    }
 }

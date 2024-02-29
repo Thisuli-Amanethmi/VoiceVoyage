@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="#A5DAF3">
 
-    <!-- Your UI elements go here -->
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

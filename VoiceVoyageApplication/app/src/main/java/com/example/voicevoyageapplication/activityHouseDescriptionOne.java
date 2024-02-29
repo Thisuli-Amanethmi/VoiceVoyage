@@ -23,7 +23,7 @@ public class activityHouseDescriptionOne extends AppCompatActivity {
         // Initialize views
         greetingTextView = findViewById(R.id.greetingTextView);
         leftEditText = findViewById(R.id.leftEditText);
-        instructionsButton = findViewById(R.id.instructions_button);
+        instructionsButton = findViewById(R.id.agree_button);
         nextButton = findViewById(R.id.next_button);
 
         // Retrieve the username from the intent extras
@@ -36,10 +36,6 @@ public class activityHouseDescriptionOne extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Save answers given by the user
-                String leftAnswer = leftEditText.getText().toString();
-                String rightAnswer = rightEditText.getText().toString();
-
                 // Pass the data to the next activity
                 Intent intent = new Intent(activityHouseDescriptionOne.this, activityHouseDescriptionTwo.class);
 
@@ -51,10 +47,6 @@ public class activityHouseDescriptionOne extends AppCompatActivity {
         instructionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Save answers given by the user
-                String leftAnswer = leftEditText.getText().toString();
-                String rightAnswer = rightEditText.getText().toString();
-
                 // Pass the data to the next activity
                 Intent intent = new Intent(activityHouseDescriptionOne.this, activityInstructions.class);
 

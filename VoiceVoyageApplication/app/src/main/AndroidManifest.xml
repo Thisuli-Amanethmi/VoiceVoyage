@@ -13,7 +13,7 @@
         android:theme="@style/Theme.VoiceVoyageApplication"
         tools:targetApi="31">
 
-        <activity android:name="com.example.voicevoyageapplication.activityRegister"
+        <activity android:name="com.example.voicevoyageapplication.activityUserHome"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,11 +21,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activityHouseDescriptionOne"> </activity>
+        <activity android:name="com.example.voicevoyageapplication.activityHouseDescriptionOne"> </activity>
 
-        <activity android:name=".activityHouseDescriptionTwo"> </activity>
+        <activity android:name="com.example.voicevoyageapplication.activityHouseDescriptionTwo"> </activity>
 
-        <activity android:name=".activityInstructions"> </activity>
+        <activity android:name="com.example.voicevoyageapplication.activityHouseDescriptionThree"> </activity>
+
+        <activity android:name="com.example.voicevoyageapplication.activityInstructions"> </activity>
 
     </application>
 
