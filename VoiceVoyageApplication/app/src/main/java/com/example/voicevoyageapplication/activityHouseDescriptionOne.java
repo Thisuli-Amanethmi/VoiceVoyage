@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class activityHouseDescriptionOne extends AppCompatActivity {
 
     TextView greetingTextView;
-    EditText leftEditText, rightEditText;
+    EditText inFrontEditText, leftEditText, farLeftEditText;
     Button nextButton, instructionsButton;
 
     @Override
@@ -22,7 +22,9 @@ public class activityHouseDescriptionOne extends AppCompatActivity {
 
         // Initialize views
         greetingTextView = findViewById(R.id.greetingTextView);
+        inFrontEditText = findViewById(R.id.inFrontEditText);
         leftEditText = findViewById(R.id.leftEditText);
+        farLeftEditText = findViewById(R.id.farLeftEditText);
         instructionsButton = findViewById(R.id.agree_button);
         nextButton = findViewById(R.id.next_button);
 
@@ -32,7 +34,7 @@ public class activityHouseDescriptionOne extends AppCompatActivity {
         // Display user name in greetingTextView
         greetingTextView.setText("Hi, " + userName + " !");
 
-        // Handle submit button click
+        // Handle button click
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

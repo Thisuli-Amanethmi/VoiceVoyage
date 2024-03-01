@@ -9,7 +9,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class activityRegister extends AppCompatActivity {
-    private Button registerButton;
+    private Button registerButton, backButton;
     private EditText editTextUserName, editTextEmailAddress, editTextPassword;
 
     @Override
@@ -17,11 +17,14 @@ public class activityRegister extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        registerButton = findViewById(R.id.button);
+        // Initialize buttons and texts
+        registerButton = findViewById(R.id.button_register);
+        backButton = findViewById(R.id.button_back);
         editTextUserName = findViewById(R.id.editText);
         editTextEmailAddress = findViewById(R.id.editTextEmailAddress);
         editTextPassword = findViewById(R.id.editTextTextPassword);
 
+        // Handle button click
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,6 +38,18 @@ public class activityRegister extends AppCompatActivity {
                 intent.putExtra("USER_NAME", userName);
                 intent.putExtra("EMAIL_ADDRESS", emailAddress);
                 intent.putExtra("PASSWORD", password);
+
+                // Start the next activity
+                startActivity(intent);
+
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Pass the data to the next activity
+                Intent intent = new Intent(activityRegister.this, activityFirstScreen.class);
 
                 // Start the next activity
                 startActivity(intent);

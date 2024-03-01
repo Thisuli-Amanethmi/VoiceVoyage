@@ -7,38 +7,38 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class activityHomeStructureConfirmation extends AppCompatActivity {
-    Button button_change, button_confirm;
+public class activityFirstScreen extends AppCompatActivity {
+    private Button logInButton, registerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_house_layout_confirmation_screen);
+        setContentView(R.layout.activity_first_screen);
 
-        // Initialize buttons
-        button_confirm = findViewById(R.id.confirm_button);
-        button_change = findViewById(R.id.change_button);
+        logInButton = findViewById(R.id.button_login);
+        registerButton = findViewById(R.id.button_register);
 
-        // Handle button click
-        button_change.setOnClickListener(new View.OnClickListener() {
+        logInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Pass the data to the next activity
-                Intent intent = new Intent(activityHomeStructureConfirmation.this, activityHouseDescriptionOne.class);
+                Intent intent = new Intent(activityFirstScreen.this, activityLogIn.class);
 
                 // Start the next activity
                 startActivity(intent);
+
             }
         });
 
-        button_confirm.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Pass the data to the next activity
-                Intent intent = new Intent(activityHomeStructureConfirmation.this, activityUserHome.class);
+                Intent intent = new Intent(activityFirstScreen.this, activityRegister.class);
 
                 // Start the next activity
                 startActivity(intent);
+
             }
         });
     }
