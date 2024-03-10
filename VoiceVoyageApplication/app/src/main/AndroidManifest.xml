@@ -13,13 +13,24 @@
         android:theme="@style/Theme.VoiceVoyageApplication"
         tools:targetApi="31">
 
-        <activity android:name="com.example.voicevoyageapplication.mainActivity"
+<!--        <activity android:name="com.example.voicevoyageapplication.mainActivity"-->
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+
+        <activity android:name="com.example.voicevoyageapplication.activityFirstScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name="com.example.voicevoyageapplication.activityUserHome"
+            android:exported="false"> </activity>
 
         <activity android:name="com.example.voicevoyageapplication.activityLogIn"> </activity>
 
@@ -32,8 +43,6 @@
         <activity android:name="com.example.voicevoyageapplication.activityHouseDescriptionThree"> </activity>
 
         <activity android:name="com.example.voicevoyageapplication.activityHomeStructureConfirmation"> </activity>
-
-        <activity android:name="com.example.voicevoyageapplication.activityUserHome"> </activity>
 
         <activity android:name="com.example.voicevoyageapplication.activityInstructions"> </activity>
 

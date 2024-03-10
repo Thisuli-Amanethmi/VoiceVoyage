@@ -41,5 +41,11 @@ public class activityFirstScreen extends AppCompatActivity {
 
             }
         });
+
+//        // Inside mainActivity after the user has successfully logged in or completed setup
+//        Intent intent = new Intent(activityFirstScreen.this, activityUserHome.class);
+//        startActivity(intent);
+//        finish(); // Finish the mainActivity to prevent returning to it
+
     }
 }

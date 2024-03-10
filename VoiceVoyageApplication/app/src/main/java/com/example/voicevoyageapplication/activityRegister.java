@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class activityRegister extends AppCompatActivity {
     private Button registerButton, backButton;
     private EditText editTextUserName, editTextEmailAddress, editTextPassword;
+    database db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,7 @@ public class activityRegister extends AppCompatActivity {
         editTextUserName = findViewById(R.id.editText);
         editTextEmailAddress = findViewById(R.id.editTextEmailAddress);
         editTextPassword = findViewById(R.id.editTextTextPassword);
+        db = new database(this);
 
         // Handle button click
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -33,14 +36,43 @@ public class activityRegister extends AppCompatActivity {
                 String emailAddress = editTextEmailAddress.getText().toString();
                 String password = editTextPassword.getText().toString();
 
-                // Pass the data to the next activity
-                Intent intent = new Intent(activityRegister.this, activityHouseDescriptionOne.class);
-                intent.putExtra("USER_NAME", userName);
-                intent.putExtra("EMAIL_ADDRESS", emailAddress);
-                intent.putExtra("PASSWORD", password);
+                if(userName.equals("") || emailAddress.equals("") || password.equals(""))
+                    Toast.makeText(activityRegister.this, "Please enter all the fields", Toast.LENGTH_SHORT).show();
+                else{
+                    Boolean checkUser = db.checkUser(userName, emailAddress, password);
 
-                // Start the next activity
-                startActivity(intent);
+                    if(!checkUser){
+                        Boolean checkUserName = db.checkUserName(userName); // check username
+
+                        if(!checkUserName) { // false
+                            Boolean checkUserEmail = db.checkUserName(emailAddress); // check email
+
+                            if(!checkUserEmail) { // false
+                                Boolean insert = db.insertData(userName, emailAddress, password);
+
+                                if(insert){ // true
+                                    Toast.makeText(activityRegister.this, "Registered successfully!", Toast.LENGTH_SHORT).show();
+
+                                    // Pass the data to the next activity
+                                    Intent intent = new Intent(activityRegister.this, activityHouseDescriptionOne.class);
+                                    intent.putExtra("USER_NAME", userName);
+                                    intent.putExtra("EMAIL_ADDRESS", emailAddress);
+                                    intent.putExtra("PASSWORD", password);
+
+                                    // Start the next activity
+                                    startActivity(intent);
+                                }
+                                else{
+                                    Toast.makeText(activityRegister.this, "Registration failed.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } else{
+                            Toast.makeText(activityRegister.this, "Username already exists! Enter a new username.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(activityRegister.this, "User already exists! please sign in.", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
             }
         });
