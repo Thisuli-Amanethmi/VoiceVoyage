@@ -9,11 +9,61 @@ import pyttsx3
 # Initialize the text-to-speech engine
 engine = pyttsx3.init()
 
-def Navigation_algorithm(object,detected_list):
-    if len(detected_list)<=2 and object==NV.front:
-        announcement = "The "+object+" infront of you."
-    if len(detected_list<5) and (object not in detected_list) and object==NV.queryLeft:
-        announcement=""
+def Navigation_algorithm(current_object_list,previous_object_list):
+    left=0
+    right=0
+    index=0
+    midIndex=0
+    left_obj=[NV.queryLeft,NV.queryFarLeft]
+    right_obj=[NV.queryRight,NV.queryFarRight]
+    mid_obj=[NV.front,NV.queryCenter]
+    if (previous_object_list[-1] in left_obj and (i in left_obj for i in current_object_list)) or (previous_object_list[-1] in mid_obj and (i in left_obj for i in current_object_list) ):
+        announcement="You are in the left side if the room."
+    elif (previous_object_list[-1] in right_obj and (i in right_obj for i in current_object_list)) or (previous_object_list[-1] in mid_obj and (i in right_obj for i in current_object_list)):
+        announcement = "You are in the right side if the room."
+    for i in current_object_list:
+        if i in left_obj:
+            left+=1
+        elif i in right_obj:
+            right+=1
+    if (NV.queryFarLeft in previous_object_list) and (( NV.queryLeft) in current_object_list):
+        announcement=NV.queryLeft+" is in your front."
+    elif (NV.queryLeft in previous_object_list):
+        if (NV.queryCenter in current_object_list):
+            announcement =NV.queryCenter+" is in your right."
+        elif NV.front in current_object_list:
+            announcement=NV.queryCenter +" is in your left."
+
+
+
+    if left>0:
+        for i in current_object_list:
+            if i in left_obj:
+                idex=i
+            elif i in mid_obj:
+                midIndex=i
+        announcement1=current_object_list[idex]+" in your left."
+        if midIndex!=0:
+            announcement2=current_object_list[midIndex]+" is in your right."
+    elif right>0:
+        for i in current_object_list:
+            if i in right_obj:
+                idex=i
+            elif i in mid_obj:
+                midIndex=i
+        announcement=current_object_list[idex]+" in your right."
+        if midIndex!=0:
+            announcement2=current_object_list[midIndex]+" is in your right."
+
+
+
+
+
+
+
+
+
+
 
 class_list = ["bed","bookshelf","chair","clothes-rack","coffee-table","commode","cupboard","door","dressing-table","lamp","oven","pantry-cupboards","refrigerator","shoe-rack","sink","sofa","staircase","stove","table","tv","wall-art","washing-machine","window"]
 
