@@ -8,60 +8,113 @@ import pyttsx3
 
 # Initialize the text-to-speech engine
 engine = pyttsx3.init()
+Previous_object_list=[]
+Current_object_list=[]
 
-def Navigation_algorithm(current_object_list,previous_object_list):
+def Navigation_algorithm(object_list):
     left=0
     right=0
-    index=0
-    midIndex=0
-    left_obj=[NV.queryLeft,NV.queryFarLeft]
-    right_obj=[NV.queryRight,NV.queryFarRight]
-    mid_obj=[NV.front,NV.queryCenter]
-    if (previous_object_list[-1] in left_obj and (i in left_obj for i in current_object_list)) or (previous_object_list[-1] in mid_obj and (i in left_obj for i in current_object_list) ):
-        announcement="You are in the left side if the room."
-    elif (previous_object_list[-1] in right_obj and (i in right_obj for i in current_object_list)) or (previous_object_list[-1] in mid_obj and (i in right_obj for i in current_object_list)):
-        announcement = "You are in the right side if the room."
-    for i in current_object_list:
-        if i in left_obj:
+    mid=0
+    Left_obj=[NV.queryLeft,NV.queryFarLeft]
+    Right_obj=[NV.Right,NV.queryFarRight]
+    Mid_obj=[NV.queryCenter,NV.front]
+
+    for index in object_list:
+        if index in Left_obj:
             left+=1
-        elif i in right_obj:
+            Left_object =object_list.index(index)
+        elif index in Right_obj:
             right+=1
-    if (NV.queryFarLeft in previous_object_list) and (( NV.queryLeft) in current_object_list):
-        announcement=NV.queryLeft+" is in your front."
-    elif (NV.queryLeft in previous_object_list):
-        if (NV.queryCenter in current_object_list):
-            announcement =NV.queryCenter+" is in your right."
-        elif NV.front in current_object_list:
-            announcement=NV.queryCenter +" is in your left."
+            Right_object = object_list.index(index)
+        elif index in Mid_obj:
+            mid+=1
+            Mid_object =object_list.index(index)
+
+    if left>right and left>mid:
+        return "Left", Left_object
+    elif right>left and right>mid:
+        return "Right", Right_object
+    elif mid>right and mid>left:
+        return "mid", Mid_object
+    else:
+        return 0,0
 
 
+def CheckForTurnBack(Current_object_list, Previous_object_list):
+    if (len(Current_object_list) >= 2 and len(Previous_object_list) >= 2):
+        if(Current_object_list[-1] == Previous_object_list[-1] and Current_object_list[-2] == Previous_object_list[-2]):
+            TurnBackDetected = True
+            return TurnBackDetected
 
-    if left>0:
-        for i in current_object_list:
-            if i in left_obj:
-                idex=i
-            elif i in mid_obj:
-                midIndex=i
-        announcement1=current_object_list[idex]+" in your left."
-        if midIndex!=0:
-            announcement2=current_object_list[midIndex]+" is in your right."
-    elif right>0:
-        for i in current_object_list:
-            if i in right_obj:
-                idex=i
-            elif i in mid_obj:
-                midIndex=i
-        announcement=current_object_list[idex]+" in your right."
-        if midIndex!=0:
-            announcement2=current_object_list[midIndex]+" is in your right."
+        else:
+            TurnBackDetected = False
+            return TurnBackDetected
+    else:
+        TurnBackDetected = False
+        return TurnBackDetected
 
 
+def navigation_algo_part2(Current_object_list,Previous_object_List):
+    Current_orientation, Current_object_index = Navigation_algorithm(Current_object_list)
+    Previous_orientation, Previous_object_index = Navigation_algorithm([Previous_object_List[-1]])
+    TurnBackDetected = CheckForTurnBack(Current_object_list, Previous_object_List)
+    if Current_orientation==0 or Previous_orientation==0:
+        pass
 
+    if TurnBackDetected == False:
+        if Current_orientation =="Mid" and Previous_orientation =="Left":
+            Announcement = Current_object_list[Current_object_index] + "is in your right."
+        elif Current_orientation =="Mid" and Previous_orientation =="Right":
+            Announcement = Current_object_list[Current_object_index] +" is in your left."
+        elif Current_orientation =="Left" and Previous_orientation =="Right":
+            Announcement = Current_object_list[Current_object_index] +" is in your right."
+        elif Current_orientation =="Left" and Previous_orientation =="Mid":
+            Announcement = Current_object_list[Current_object_index] +" is in your right."
+        elif Current_orientation =="Right" and Previous_orientation =="Left":
+            Announcement = Current_object_list[Current_object_index] +" is in your right."
+        elif Current_orientation =="Right" and Previous_orientation =="Mid":
+            Announcement = Current_object_list[Current_object_index] +" is in your right."
+        elif (Current_orientation=="Right" and Previous_orientation=="Right") and (Current_object_index!=Previous_orientation):
+            Announcement = Current_object_list[Current_object_index] +" is in your right."
+        elif (Current_orientation=="Left" and Previous_orientation=="Left") and (Current_object_index!=Previous_orientation):
+            Announcement = Current_object_list[Current_object_index] +" is in your Left."
+        else:
+            print(TurnBackDetected,Previous_orientation,Current_orientation)
+            Announcement = "There is a " + Current_object_list[-1]
 
+            return Announcement
 
+    elif TurnBackDetected == True:
+        if Current_orientation=="Left":
+            Current_orientation=="Right"
+        elif Current_orientation=="right":
+            Current_orientation == "left"
+        if Previous_orientation=="Right":
+            Previous_orientation=="Left"
+        elif Previous_orientation=="Left":
+            Previous_orientation == "Right"
+        if Current_orientation =="Mid" and Previous_orientation =="Left":
+            Announcement = Current_object_list[Current_object_index] + "is in your right."
+        elif Current_orientation =="Mid" and Previous_orientation =="Right":
+            Announcement = Current_object_list[Current_object_index] +" is in your left."
+        elif Current_orientation =="Left" and Previous_orientation =="Right":
+            Announcement = Current_object_list[Current_object_index] +" is in your right."
+        elif Current_orientation =="Left" and Previous_orientation =="Mid":
+            Announcement = Current_object_list[Current_object_index] +" is in your right."
+        elif Current_orientation =="Right" and Previous_orientation =="Left":
+            Announcement = Current_object_list[Current_object_index] +" is in your right."
+        elif Current_orientation =="Right" and Previous_orientation =="Mid":
+            Announcement = Current_object_list[Current_object_index] +" is in your right."
+        elif (Current_orientation=="Right" and Previous_orientation=="Right") and (Current_object_index!=Previous_orientation):
+            Announcement = Current_object_list[Current_object_index] +" is in your right."
+        elif (Current_orientation=="Left" and Previous_orientation=="Left") and (Current_object_index!=Previous_orientation):
+            Announcement = Current_object_list[Current_object_index] +" is in your Left."
+        else:
+            print(TurnBackDetected,Previous_orientation,Current_orientation)
+            Announcement = "There is a " + Current_object_list[-1]
 
-
-
+        return Announcement
+    return
 
 
 
@@ -131,7 +184,7 @@ while True:
             )
 
 
-            # Display class name and confidence
+            # Display class name and confidfence
             font = cv2.FONT_HERSHEY_COMPLEX
             cv2.putText(
                 frame,
@@ -153,9 +206,19 @@ while True:
 
             # Announce detected objects if any
             if detected_classes:
-                announcement = "Detected " + ", ".join(detected_classes)
-                engine.say(announcement)
-                engine.runAndWait()
+                if type(detected_classes)==list:
+                    for i in detected_classes:
+                        Current_object_list.append(i)
+                        Previous_object_list.append(i)
+                else:
+                    Current_object_list.append(detected_classes)
+                    Previous_object_list.append(detected_classes)
+
+            announcement=navigation_algo_part2(Current_object_list,Previous_object_list)
+            print(Previous_object_list)
+            engine.say(announcement)
+            engine.runAndWait()
+            Current_object_list=[]
 
     # Display the resulting frame
     cv2.imshow('ObjectDetection', frame)
