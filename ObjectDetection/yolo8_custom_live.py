@@ -158,7 +158,7 @@ while True:
     #frame = cv2.resize(frame, (frame_wid, frame_hyt))
 
     # Predict on image
-    detect_params = model.predict(source=[frame], conf=0.45, save=False)
+    detect_params = model.predict(source=[frame], conf=0.6, save=False)
 
 
     # Convert tensor array to numpy
