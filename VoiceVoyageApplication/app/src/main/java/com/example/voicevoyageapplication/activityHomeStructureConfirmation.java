@@ -75,6 +75,11 @@ public class activityHomeStructureConfirmation extends AppCompatActivity {
             imageViewRight.setImageDrawable(getResources().getDrawable(rightImageId));
         }
 
+        if(objectsList.contains(farRight)){
+            int farRightImageId = getResources().getIdentifier(farRight, "drawable", getPackageName());
+            imageViewFarRight.setImageDrawable(getResources().getDrawable(farRightImageId));
+        }
+
         if(objectsList.contains(center)){
             int centerImageId = getResources().getIdentifier(center, "drawable", getPackageName());
             imageViewCenter.setImageDrawable(getResources().getDrawable(centerImageId));
