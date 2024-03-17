@@ -1,117 +1,106 @@
-from flask import Flask, render_template, Response, request
+from flask import Flask, render_template, Response
 import cv2
-import numpy as np
+from ultralytics import YOLO
 import random
-from threading import Thread
-import time
-import pyttsx3 
-from pyttsx3 import init # Import for text-to-speech
-from ultralytics import YOLO  # Assuming you have ultralytics installed
-
-
-# Define class list and colors (modify as needed)
-class_list = [
-    "bed", "bookshelf", "chair", "clothes-rack", "coffee-table", "commode",
-    "cupboard", "door", "dressing-table", "lamp", "oven", "pantry-cupboards",
-    "refrigerator", "shoe-rack", "sink", "sofa", "staircase", "stove", "table",
-    "tv", "wall-art", "washing-machine", "window"
-]
-
-# Generate random colors for each class
-detection_colors = [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for _ in range(len(class_list))]
-
-# Load YOLOv8 model (replace with your model path)
-model = YOLO("voiceVoyage_version8_best.pt", "v8")  # Assuming correct path
+import pyttsx3
+from io import BytesIO
 
 # Initialize text-to-speech engine
-engine = init()
+engine = pyttsx3.init()
 
-# Set video resolution (adjust as needed)
-frame_width = 640
-frame_height = 480
+# Object class list
+class_list = [
+    "bed", "bookshelf", "chair", "clothes-rack", "coffee-table", "commode", "cupboard", "door", "dressing-table", "lamp", "oven", "pantry-cupboards",
+    "refrigerator", "shoe-rack", "sink", "sofa", "staircase", "stove", "table", "tv", "wall-art", "washing-machine", "window"
+]
 
-# Global variables (consider using thread-safe alternatives)
-detected_objects = []
-announcement = ""
-previous_objects = []  # Assuming no initial objects
+# Generate random colors for class list
+detection_colors = []
+for i in range(len(class_list)):
+  r = random.randint(0, 255)
+  g = random.randint(0, 255)
+  b = random.randint(0, 255)
+  detection_colors.append((b, g, r))
 
+# Load YOLO model (replace with your model path)
+model = YOLO("voiceVoyage_version8_best.pt")
 
-def generate_frames():
-    global detected_objects, announcement, previous_objects
-    cap = cv2.VideoCapture(0)  # Change to video file path if needed
+# Define helper functions
+def generate_announcement(detected_classes):
+  announcement = ""
+  if detected_classes:
+    for i in detected_classes:
+      announcement += i + " "
+  else:
+    announcement = "No objects detected."
+  return announcement
 
-    if not cap.isOpened():
-        print("Error opening camera")
-        return
+def draw_detections(frame, boxes, confidences, class_ids):
+  for i in range(len(boxes)):
+    # Extract bounding box coordinates and confidence score
+    x_min, y_min, x_max, y_max = boxes[i]
+    confidence = confidences[i]
+    class_id = class_ids[i]
 
-    while True:
-        ret, frame = cap.read()
+    # Draw rectangle around detected object
+    cv2.rectangle(frame, (int(x_min), int(y_min)), (int(x_max), int(y_max)), detection_colors[class_id], 2)
 
-        if not ret:
-            print("Can't receive frame (stream end?). Exiting...")
-            break
+    # Display class name and confidence score
+    font = cv2.FONT_HERSHEY_COMPLEX
+    cv2.putText(frame, f"{class_list[class_id]} {confidence:.2f}", (int(x_min), int(y_min) - 10), font, 0.7, (255, 255, 255), 2)
 
-        # Resize frame (optional, adjust based on performance requirements)
-        # frame = cv2.resize(frame, (frame_width, frame_height))
+def process_frame(frame):
+  # Resize frame (optional, adjust dimensions as needed)
+  # frame = cv2.resize(frame, (640, 480))
 
-        # Perform object detection with YOLO
-        print(type(results))
-        print(results)
-        results = model(frame)
-        results.render()  # Render detections (optional)
+  # Perform object detection with YOLO
+  results = model.predict(source=[frame], conf=0.6, save=False)[0]
 
-        # Process detections
-        detected_objects.clear()
-        for result in results.pandas().xyxy[0]:  # Assuming single image output
-            conf = round(result["confidence"], 3)
-            if conf > 0.6:  # Adjust confidence threshold as needed
-                cls = class_list[int(result["class"])]
-                detected_objects.append(cls)
+  # Extract detected objects and their properties
+  boxes = results.boxes.numpy()
+  confidences = results.scores.numpy()
+  class_ids = results.classes.numpy()
 
-        # Navigation algorithm (assuming implementation is available)
-        # if NV and DB are imported:
-        #     announcement = navigation_algo_part2(detected_objects, previous_objects)
-        # else:
-        #     print("Navigation algorithm not implemented")
-        announcement = "Object detection and navigation algorithm not yet implemented."
+  # Draw detections on the frame
+  draw_detections(frame, boxes, confidences, class_ids)
 
-        # Announce detected objects (replace with your logic)
-        if detected_objects:
-            if type(detected_objects) == list:
-                for obj in detected_objects:
-                    engine.say(obj)
-                    engine.runAndWait()
-            else:
-                engine.say(detected_objects)
-                engine.runAndWait()
+  # Collect detected classes for announcement
+  detected_classes = []
+  for i in range(len(boxes)):
+    detected_classes.append(class_list[class_ids[i]])
 
-        previous_objects = detected_objects.copy()  # Update previous objects
+  # Generate announcement text
+  announcement = generate_announcement(detected_classes)
+  engine.say(announcement)
+  engine.runAndWait()
 
-        # Convert frame to bytes for streaming
-        ret, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
+  return frame, announcement
 
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-        time.sleep(0.1)  # Adjust delay between frames as needed
-
-    cap.release()
-    cv2.destroyAllWindows()
-
-
+# Flask app setup
 app = Flask(__name__)
 
-
-@app.route('/')
+@app.route('/video')
 def video():
-    return render_template('index.html')  # Replace with your template
+  # Access camera
+  cap = cv2.VideoCapture(0)
 
+  def generate():
+    while True:
+      ret, frame = cap.read()
+      if not ret:
+        print("Can't receive frame, exiting...")
+        break
 
-@app.route('/video_feed')
-def video_feed():
-    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+      # Process frame for object detection and announcement
+      processed_frame, announcement = process_frame(frame)
 
+      # Convert frame to bytes for streaming
+      _, buffer = cv2.imencode('.jpg', processed_frame)
+      frame_bytes = buffer.tobytes()
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
+      # Set announcement as response header
+      yield (b'--frame\r\n'
+             b'Content-Type: image/jpeg\r\n'
+             b'X-Announcement: ' + announcement.encode('utf-8') + b'\r\n\r\n' + frame_bytes + b'\r\n')
+
+  return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')

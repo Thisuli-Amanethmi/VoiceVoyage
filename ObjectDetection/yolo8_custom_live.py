@@ -216,6 +216,7 @@ while True:
 
             announcement=navigation_algo_part2(Current_object_list,Previous_object_list)
             print(Previous_object_list)
+            print("HIIIIII")
             engine.say(announcement)
             engine.runAndWait()
             Current_object_list=[]
