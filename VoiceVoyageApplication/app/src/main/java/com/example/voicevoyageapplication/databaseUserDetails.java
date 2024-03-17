@@ -6,15 +6,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class database extends SQLiteOpenHelper {
-    public static final String DBName = "Register.db"; // name of the databse
+public class databaseUserDetails extends SQLiteOpenHelper {
+    public static final String DBName = "UserDetails.db"; // name of the database
 
     // constructor - creating database
-    public database(Context context) {
-        super(context, "Register.db", null, 1);
+    public databaseUserDetails(Context context) {
+        super(context, "UserDetails.db", null, 1);
     }
 
-    // to create user table
+    // create user table
     @Override
     public void onCreate(SQLiteDatabase MyDB) {
         MyDB.execSQL("create Table users(username TEXT primary key, email TEXT, password TEXT)");
@@ -25,7 +25,7 @@ public class database extends SQLiteOpenHelper {
         MyDB.execSQL("drop Table if exists users");
     }
 
-    // to insert data
+    // insert data into the users table
     public Boolean insertData(String username, String email, String password){
         SQLiteDatabase MyDB = this.getWritableDatabase();
 

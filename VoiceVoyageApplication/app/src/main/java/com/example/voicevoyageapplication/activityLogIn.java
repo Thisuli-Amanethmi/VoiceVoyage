@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class activityLogIn extends AppCompatActivity {
     private Button logInButton, backButton;
     private TextView userName, password;
-    database db;
+    databaseUserDetails db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class activityLogIn extends AppCompatActivity {
         userName = findViewById(R.id.userName);
         password = findViewById(R.id.password);
 
-        db = new database(this);
+        db = new databaseUserDetails(this);
 
         // Handle button click
         logInButton.setOnClickListener(new View.OnClickListener() {

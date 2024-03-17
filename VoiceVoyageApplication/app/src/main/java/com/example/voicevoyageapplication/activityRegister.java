@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class activityRegister extends AppCompatActivity {
     private Button registerButton, backButton;
     private EditText editTextUserName, editTextEmailAddress, editTextPassword;
-    database db;
+    databaseUserDetails db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,8 @@ public class activityRegister extends AppCompatActivity {
         editTextUserName = findViewById(R.id.editText);
         editTextEmailAddress = findViewById(R.id.editTextEmailAddress);
         editTextPassword = findViewById(R.id.editTextTextPassword);
-        db = new database(this);
+
+        db = new databaseUserDetails(this);
 
         // Handle button click
         registerButton.setOnClickListener(new View.OnClickListener() {
