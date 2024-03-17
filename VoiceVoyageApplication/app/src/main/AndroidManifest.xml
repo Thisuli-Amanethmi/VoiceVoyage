@@ -48,6 +48,7 @@
         <activity android:name="com.example.voicevoyageapplication.activityInstructions"> </activity>
 
         <activity android:name="com.example.voicevoyageapplication.activityObjectDetectionAndNavigation"> </activity>
+        <activity android:name="com.example.voicevoyageapplication.activityNavigation"> </activity>
 
         <activity android:name="com.example.voicevoyageapplication.activitySettings"> </activity>
 

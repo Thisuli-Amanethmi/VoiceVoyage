@@ -20,13 +20,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class activityObjectDetectionAndNavigation extends AppCompatActivity {
+public class activityNavigation extends AppCompatActivity {
 
     Button button_back;
     Button button_start_detection;
-    Button button_stop_detection;
     TextView textView_detectionResults;
-    boolean isDetectionRunning = false; // Flag to track detection state
+    boolean isDetectionRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,23 +35,7 @@ public class activityObjectDetectionAndNavigation extends AppCompatActivity {
         // Initialize buttons and text view
         button_back = findViewById(R.id.button_back);
         button_start_detection = findViewById(R.id.button_start_detection);
-        button_stop_detection = findViewById(R.id.button_stop_detection);
         textView_detectionResults = findViewById(R.id.textView4);
-
-        // Handle button click for navigating back
-        button_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Pass the data to the next activity (optional)
-                Intent intent = new Intent(activityObjectDetectionAndNavigation.this, activityUserHome.class);
-                startActivity(intent);
-
-                // Stop detection if running
-                if (isDetectionRunning) {
-                    stopDetection();
-                }
-            }
-        });
 
         // Handle button click for starting detection
         button_start_detection.setOnClickListener(new View.OnClickListener() {
@@ -65,17 +48,19 @@ public class activityObjectDetectionAndNavigation extends AppCompatActivity {
             }
         });
 
-        // Handle button click for stopping detection
-        button_stop_detection.setOnClickListener(new View.OnClickListener() {
+        // Handle button click for navigating back
+        button_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isDetectionRunning) {
-                    stopDetection();
-                    isDetectionRunning = false;
-                }
+                stopDetection();
+
+                Intent intent = new Intent(activityNavigation.this, activityUserHome.class);
+                startActivity(intent);
             }
         });
     }
+
+    DetectObjectsTask detectObjectsTask = new DetectObjectsTask();
 
     private void startDetection() {
         // Execute AsyncTask to perform object detection on a background thread
@@ -83,18 +68,19 @@ public class activityObjectDetectionAndNavigation extends AppCompatActivity {
     }
 
     private void stopDetection() {
-        // Implement logic to stop detection if needed (might not be necessary with Flask)
-        // You can remove objects from the view or display a message here
-        textView_detectionResults.setText("Detection Stopped");
+        // Stop AsyncTask
+        if (detectObjectsTask != null) {
+            detectObjectsTask.cancel(true);
+        }
     }
 
     private class DetectObjectsTask extends AsyncTask<Void, Void, String> {
-
         @Override
         protected String doInBackground(Void... voids) {
-            String serverUrl = "http://192.168.1.12:5000/detect_objects"; // home wifi
+            String serverUrl = "http://192.168.1.12:5000/video_feed"; // home wifi
             // String serverUrl = "http://172.27.41.213:5000/detect_objects"; // IIT server address
             // String serverUrl = "http://127.0.0.1:5000/detect_objects"; // local host server address
+
             String response = "";
 
             try {
@@ -115,16 +101,37 @@ public class activityObjectDetectionAndNavigation extends AppCompatActivity {
                     response = stringBuilder.toString();
 
                     Log.d("NET", response);
+
+                    // Parse the JSON response (optional)
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        // Extract detected objects (handle potential errors)
+                        JSONArray objects = jsonObject.getJSONArray("objects");  // Assuming "objects" key in response
+                        String objectList = "";
+                        String detectionResults = "";
+
+                        for (int i = 0; i < objects.length(); i++) {
+                            objectList += objects.getString(i) + ", ";
+                        }
+                        if (objectList.length() > 0) {
+                            objectList = objectList.substring(0, objectList.length() - 2); // Remove trailing comma and space
+                            detectionResults = "Detected Objects: " + objectList;
+                        } else {
+                            detectionResults = "No objects detected";
+                        }
+                    } catch (JSONException e) {
+                        Log.e("ObjectDetection", "Error parsing JSON response: " + e.getMessage());
+                    }
                 } else {
                     Log.e("ObjectDetection", "Error: HTTP " + connection.getResponseCode());
                 }
                 connection.disconnect();
             } catch (IOException e) {
                 Log.e("ObjectDetection", "Error: " + e.getMessage());
-                e.printStackTrace();
             }
 
-            return response;
+            return null;
         }
+
     }
 }

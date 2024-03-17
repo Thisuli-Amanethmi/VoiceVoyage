@@ -37,7 +37,7 @@ public class activityUserHome extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Pass the data to the next activity
-                Intent intent = new Intent(activityUserHome.this, activityObjectDetectionAndNavigation.class);
+                Intent intent = new Intent(activityUserHome.this, activityNavigation.class);
 
                 // Start the next activity
                 startActivity(intent);
