@@ -1,3 +1,5 @@
+import threading
+
 from OntologyGraph import Database as DB, NavAlgo as NV
 
 import numpy as np
@@ -8,8 +10,28 @@ import pyttsx3
 
 # Initialize the text-to-speech engine
 engine = pyttsx3.init()
-Previous_object_list=[]
-Current_object_list=[]
+engine.setProperty('rate', 150) # words per minute = 150
+
+Previous_object_list = []
+Current_object_list = ["first object"]
+
+# Global flag variable to control thread execution
+terminate_thread = False
+
+
+def speak(text):
+    engine = pyttsx3.init()
+    engine.setProperty('rate', 150)  # words per minute = 150
+    engine.say(text)
+    engine.runAndWait()
+
+
+def thread_function(text):
+    global terminate_thread
+    while not terminate_thread:
+        speak(text)
+    print("Thread terminated gracefully")
+
 
 def Navigation_algorithm(object_list):
     left=0
@@ -58,8 +80,11 @@ def navigation_algo_part2(Current_object_list,Previous_object_List):
     Current_orientation, Current_object_index = Navigation_algorithm(Current_object_list)
     Previous_orientation, Previous_object_index = Navigation_algorithm([Previous_object_List[-1]])
     TurnBackDetected = CheckForTurnBack(Current_object_list, Previous_object_List)
+
     if Current_orientation==0 or Previous_orientation==0:
-        pass
+        Announcement = "hiii"
+        return Announcement # thisuli
+        # pass
 
     if TurnBackDetected == False:
         if Current_orientation =="Mid" and Previous_orientation =="Left":
@@ -81,7 +106,6 @@ def navigation_algo_part2(Current_object_list,Previous_object_List):
         else:
             print(TurnBackDetected,Previous_orientation,Current_orientation)
             Announcement = "There is a " + Current_object_list[-1]
-
             return Announcement
 
     elif TurnBackDetected == True:
@@ -112,127 +136,133 @@ def navigation_algo_part2(Current_object_list,Previous_object_List):
         else:
             print(TurnBackDetected,Previous_orientation,Current_orientation)
             Announcement = "There is a " + Current_object_list[-1]
-
         return Announcement
-    return
+
+    return Announcement # thisuli
 
 
+def main():
+    class_list = ["bed", "bookshelf", "chair", "clothes-rack", "coffee-table", "commode", "cupboard", "door",
+                  "dressing-table", "lamp", "oven", "pantry-cupboards", "refrigerator", "shoe-rack", "sink", "sofa",
+                  "staircase", "stove", "table", "tv", "wall-art", "washing-machine", "window"]
 
-class_list = ["bed","bookshelf","chair","clothes-rack","coffee-table","commode","cupboard","door","dressing-table","lamp","oven","pantry-cupboards","refrigerator","shoe-rack","sink","sofa","staircase","stove","table","tv","wall-art","washing-machine","window"]
+    Current_object_list = []
+    # print(class_list)
 
+    # Generate random colors for class list
+    detection_colors = []
+    for i in range(len(class_list)):
+        r = random.randint(0, 255)
+        g = random.randint(0, 255)
+        b = random.randint(0, 255)
+        detection_colors.append((b, g, r))
 
-# print(class_list)
+    # load a pretrained YOLOv8n model
+    model = YOLO("voiceVoyage_version8_best.pt", "v8")
 
-# Generate random colors for class list
-detection_colors = []
-for i in range(len(class_list)):
-    r = random.randint(0,255)
-    g = random.randint(0,255)
-    b = random.randint(0,255)
-    detection_colors.append((b,g,r))
+    # Vals to resize video frames | small frame optimise the run
+    frame_wid = 640
+    frame_hyt = 480
 
-# load a pretrained YOLOv8n model
-model = YOLO("voiceVoyage_version8_best.pt", "v8")
+    # cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
 
-# Vals to resize video frames | small frame optimise the run
-frame_wid = 640
-frame_hyt = 480
+    if not cap.isOpened():
+        print("Cannot open camera")
+        exit()
 
-# cap = cv2.VideoCapture(1)
-cap = cv2.VideoCapture(0)
+    while True:
+        # Capture frame-by-frame
+        ret, frame = cap.read()
+        # if frame is read correctly ret is True
 
-if not cap.isOpened():
-    print("Cannot open camera")
-    exit()
+        if not ret:
+            print("Can't receive frame (stream end?). Exiting ...")
+            break
 
-while True:
-    # Capture frame-by-frame
-    ret, frame = cap.read()
-    # if frame is read correctly ret is True
+        # resize the frame | small frame optimise the run.
+        # frame = cv2.resize(frame, (frame_wid, frame_hyt))
 
-    if not ret:
-        print("Can't receive frame (stream end?). Exiting ...")
-        break
+        # Predict on image
+        detect_params = model.predict(source=[frame], conf=0.6, save=False)
 
-    # resize the frame | small frame optimise the run.
-    #frame = cv2.resize(frame, (frame_wid, frame_hyt))
+        # Convert tensor array to numpy
+        DP = detect_params[0].numpy()
 
-    # Predict on image
-    detect_params = model.predict(source=[frame], conf=0.6, save=False)
+        if len(DP) != 0:
+            detected_classes = []
+            for i in range(len(detect_params[0])):
+                boxes = detect_params[0].boxes
+                box = boxes[i]  # returns one box
+                clsID = box.cls.numpy()[0]
+                conf = box.conf.numpy()[0]
+                bb = box.xyxy.numpy()[0]
 
+                cv2.rectangle(
+                    frame,
+                    (int(bb[0]), int(bb[1])),
+                    (int(bb[2]), int(bb[3])),
+                    detection_colors[int(clsID)],
+                    3,
+                )
 
-    # Convert tensor array to numpy
-    DP = detect_params[0].numpy()
+                # Display class name and confidfence
+                font = cv2.FONT_HERSHEY_COMPLEX
+                cv2.putText(
+                    frame,
+                    class_list[int(clsID)]
+                    + " "
+                    + str(round(conf, 3))
+                    + "%",
+                    (int(bb[0]), int(bb[1]) - 10),
+                    font,
+                    1,
+                    (255, 255, 255),
+                    2,
+                )
+                # Collect detected classes for speech
+                if class_list[int(clsID)] not in detected_classes:
+                    detected_classes.append(class_list[int(clsID)])
 
+                # Announce detected objects if any
+                if detected_classes:
+                    if type(detected_classes) == list:
+                        for i in detected_classes:
+                            Current_object_list.append(i)
+                            Previous_object_list.append(i)
+                    else:
+                        Current_object_list.append(detected_classes)
+                        Previous_object_list.append(detected_classes)
 
-    if len(DP) != 0:
-        detected_classes = []
-        for i in range(len(detect_params[0])):
-            boxes = detect_params[0].boxes
-            box = boxes[i]  # returns one box
-            clsID = box.cls.numpy()[0]
-            conf = box.conf.numpy()[0]
-            bb = box.xyxy.numpy()[0]
+                print(Current_object_list)
+                print(Previous_object_list)
+                announcement = navigation_algo_part2(Current_object_list, Previous_object_list)
+                print("HIIIIII")
 
+                # Start a new thread to speak the announcement
+                thread = threading.Thread(target=thread_function, args=(announcement,))
+                thread.start()
+                # To terminate the thread, set the flag variable
+                # terminate_thread = False
 
-            cv2.rectangle(
-                frame,
-                (int(bb[0]), int(bb[1])),
-                (int(bb[2]), int(bb[3])),
-                detection_colors[int(clsID)],
-                3,
-            )
+                engine.endLoop()
 
+                # engine.say(announcement)
+                print(announcement)
+                # engine.runAndWait()
 
-            # Display class name and confidfence
-            font = cv2.FONT_HERSHEY_COMPLEX
-            cv2.putText(
-                frame,
-                class_list[int(clsID)]
-                + " "
-                + str(round(conf, 3))
-                + "%",
-                (int(bb[0]), int(bb[1]) - 10),
-                font,
-                1,
-                (255, 255, 255),
-                2,
-            )
-            # Collect detected classes for speech
-            if class_list[int(clsID)] not in detected_classes:
-                detected_classes.append(class_list[int(clsID)])
+                Current_object_list = []
+        else:
+            print("DP = 0")
 
+        # Display the resulting frame
+        cv2.imshow('ObjectDetection', frame)
 
+        # Terminate run when "Q" pressed
+        if cv2.waitKey(1) == ord('q'):
+            break
 
-            # Announce detected objects if any
-            if detected_classes:
-                if type(detected_classes)==list:
-                    for i in detected_classes:
-                        Current_object_list.append(i)
-                        Previous_object_list.append(i)
-                else:
-                    Current_object_list.append(detected_classes)
-                    Previous_object_list.append(detected_classes)
-
-            announcement=navigation_algo_part2(Current_object_list,Previous_object_list)
-            print(Previous_object_list)
-            print("HIIIIII")
-            engine.say(announcement)
-            engine.runAndWait()
-            Current_object_list=[]
-
-    # Display the resulting frame
-    cv2.imshow('ObjectDetection', frame)
-
-    # Terminate run when "Q" pressed
-    if cv2.waitKey(1) == ord('q'):
-        break
-
-# When everything done, release the capture
-cap.release()
-cv2.destroyAllWindows()
-
-
-
-
+    # When everything done, release the capture
+    cap.release()
+    cv2.destroyAllWindows()
 

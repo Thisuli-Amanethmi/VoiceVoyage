@@ -19,9 +19,9 @@ import java.net.URL;
 public class activityNavigation extends AppCompatActivity {
     Button button_back;
     Button button_start_detection, button_stop_detection;
-    TextView textView_status; // Added for displaying status
+    TextView textView_status;
 
-    private boolean isDetectionRunning = false; // Flag to track detection state
+    private boolean isDetectionRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,17 +30,22 @@ public class activityNavigation extends AppCompatActivity {
 
         // Initialize buttons and TextView
         button_back = findViewById(R.id.button_back);
-        button_start_detection = findViewById(R.id.button_start_detection); // Assuming a new button added
-        button_stop_detection = findViewById(R.id.button_stop_detection); // Assuming a new button added
-        textView_status = findViewById(R.id.textView4); // Assuming TextView displays status
+        button_start_detection = findViewById(R.id.button_start_detection);
+        button_stop_detection = findViewById(R.id.button_stop_detection);
+        textView_status = findViewById(R.id.textView4);
 
-        // Handle button click for navigating back (same as before)
+        // Handle button click for navigating back
         button_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopDetection(); // Call stopDetection before navigating back
+                // Pass the data to the next activity (optional)
                 Intent intent = new Intent(activityNavigation.this, activityUserHome.class);
                 startActivity(intent);
+
+                // Stop detection if running
+                if (isDetectionRunning) {
+                    stopDetection();
+                }
             }
         });
 
@@ -50,66 +55,161 @@ public class activityNavigation extends AppCompatActivity {
             public void onClick(View v) {
                 if (!isDetectionRunning) {
                     startDetection();
+                    isDetectionRunning = true;
                     textView_status.setText("Detection Running");
                 }
             }
         });
 
-        // Handle button click for stopping detection (optional)
+        // Handle button click for stopping detection
         button_stop_detection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopDetection();
-                textView_status.setText("Detection Stopped");
+                if (isDetectionRunning) {
+                    stopDetection();
+                    isDetectionRunning = false;
+                    textView_status.setText("Detection Stopped");
+                }
             }
         });
     }
 
     private void startDetection() {
-        isDetectionRunning = true;
-        new HttpGetTask().execute("http://192.168.1.12:5000/start_detection");
+        // Execute AsyncTask to perform object detection on a background thread
+        new DetectObjectsTaskStart().execute();
     }
 
     private void stopDetection() {
-        isDetectionRunning = false;
-        new HttpGetTask().execute("http://192.168.1.12:5000/stop_detection");
+        new DetectObjectsTaskStop().execute();
     }
 
-    // AsyncTask to handle HTTP GET requests to the Flask server (consider using a library for network calls)
-    private class HttpGetTask extends AsyncTask<String, Void, String> {
+    private class DetectObjectsTaskStart extends AsyncTask<Void, Void, String> {
 
         @Override
-        protected String doInBackground(String... urls) {
-            String urlString = urls[0];
+        protected String doInBackground(Void... voids) {
+            String serverUrl = "http://192.168.1.12:5000/start_detection"; // home wifi
+            // String serverUrl = "http://172.27.41.213:5000/detect_objects"; // IIT server address
+            // String serverUrl = "http://127.0.0.1:5000/detect_objects"; // local host server address
+            String response = "";
+
             try {
-                URL url = new URL(urlString);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setDoOutput(true);
+                URL url = new URL(serverUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder sb = new StringBuilder();
-                String line;
+                // Handle connection and response
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        stringBuilder.append(line).append("\n");
+                    }
+                    reader.close();
+                    response = stringBuilder.toString();
 
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line).append("\n");
+                    Log.d("NET", response);
+                } else {
+                    Log.e("ObjectDetection", "Error: HTTP " + connection.getResponseCode());
                 }
-
-                reader.close();
-                return sb.toString().trim();
-            } catch (Exception e) {
-                Log.e("HttpGetTask", "Error: " + e.getMessage());
-                return null;
+                connection.disconnect();
+            } catch (IOException e) {
+                Log.e("ObjectDetection", "Error: " + e.getMessage());
+                e.printStackTrace();
             }
-        }
 
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            // Handle the response from the server (if needed)
-            if (result != null) {
-                Log.i("HttpGetTask", "Response: " + result);
-            }
+            return response;
         }
     }
+
+    private class DetectObjectsTaskStop extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String serverUrl = "http://192.168.1.12:5000/stop_detection"; // home wifi
+            // String serverUrl = "http://172.27.41.213:5000/detect_objects"; // IIT server address
+            // String serverUrl = "http://127.0.0.1:5000/detect_objects"; // local host server address
+            String response = "";
+
+            try {
+                URL url = new URL(serverUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+
+                // Handle connection and response
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        stringBuilder.append(line).append("\n");
+                    }
+                    reader.close();
+                    response = stringBuilder.toString();
+
+                    Log.d("NET", response);
+                } else {
+                    Log.e("ObjectDetection", "Error: HTTP " + connection.getResponseCode());
+                }
+                connection.disconnect();
+            } catch (IOException e) {
+                Log.e("ObjectDetection", "Error: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+            return response;
+        }
+    }
+
+
+//    private void startDetection() {
+//        new HttpGetTask().execute("http://192.168.1.12:5000/start_detection");
+//        isDetectionRunning = true;
+//    }
+
+//    private void stopDetection() {
+//        isDetectionRunning = false;
+//        new HttpGetTask().execute("http://192.168.1.12:5000/stop_detection");
+//    }
+
+//    // AsyncTask to handle HTTP GET requests to the Flask server (consider using a library for network calls)
+//    private class HttpGetTask extends AsyncTask<String, Void, String> {
+//
+//        @Override
+//        protected String doInBackground(String... urls) {
+//            String urlString = urls[0];
+//            try {
+//                URL url = new URL(urlString);
+//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//                conn.setRequestMethod("GET");
+//                conn.setDoOutput(true);
+//
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//                StringBuilder sb = new StringBuilder();
+//                String line;
+//
+//                while ((line = reader.readLine()) != null) {
+//                    sb.append(line).append("\n");
+//                }
+//
+//                reader.close();
+//                return sb.toString().trim();
+//            } catch (Exception e) {
+//                Log.e("HttpGetTask", "Error: " + e.getMessage());
+//                return null;
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            // Handle the response from the server (if needed)
+//            if (result != null) {
+//                Log.i("HttpGetTask", "Response: " + result);
+//            }
+//        }
+//    }
+
 }
