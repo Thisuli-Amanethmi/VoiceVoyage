@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#A5DAF3">
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="137dp"
+        android:layout_height="75dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
+        android:backgroundTint="#CF9FFF"
+        android:text="Confirm"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/change_button"
+        android:layout_width="157dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
+        android:backgroundTint="#CF9FFF"
+        android:lines="2"
+        android:maxLines="2"
+        android:minLines="2"
+        android:text="Change House Structure"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/confirm_button"
+        app:layout_constraintHorizontal_bias="0.428"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="173dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="32dp"
+        android:lines="2"
+        android:text="House Structure Confirmation"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageViewFront"
+        android:layout_width="44dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="70dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCenter"
+        app:srcCompat="@android:drawable/gallery_thumb" />
+
+    <ImageView
+        android:id="@+id/imageViewLeft"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="128dp"
+        android:layout_marginEnd="200dp"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewRight"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFarLeft"
+        app:srcCompat="@android:drawable/gallery_thumb" />
+
+    <ImageView
+        android:id="@+id/imageViewBehind"
+        android:layout_width="46dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewPerson"
+        app:srcCompat="@android:drawable/gallery_thumb" />
+
+    <ImageView
+        android:id="@+id/imageViewFarRight"
+        android:layout_width="45dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="56dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:srcCompat="@android:drawable/gallery_thumb" />
+
+    <TextView
+        android:id="@+id/textViewBehind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Behind"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewBehind" />
+
+    <TextView
+        android:id="@+id/textViewFarRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="56dp"
+        android:text="Far Right"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewFarRight" />
+
+    <TextView
+        android:id="@+id/textViewFarLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:text="Far Left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewFarLeft" />
+
+    <TextView
+        android:id="@+id/textViewRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="56dp"
+        android:text="Right"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewRight" />
+
+    <TextView
+        android:id="@+id/textViewLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:text="Left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewLeft" />
+
+    <ImageView
+        android:id="@+id/imageViewRight"
+        android:layout_width="45dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="128dp"
+        android:layout_marginEnd="56dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFarRight"
+        app:srcCompat="@android:drawable/gallery_thumb" />
+
+    <ImageView
+        android:id="@+id/imageViewCenter"
+        android:layout_width="46dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="64dp"
+        app:layout_constraintEnd_toStartOf="@+id/textViewFarRight"
+        app:layout_constraintStart_toEndOf="@+id/textViewFarLeft"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFarLeft"
+        app:srcCompat="@android:drawable/gallery_thumb" />
+
+    <ImageView
+        android:id="@+id/imageViewFarLeft"
+        android:layout_width="51dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="200dp"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewFarRight"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:srcCompat="@android:drawable/gallery_thumb" />
+
+    <TextView
+        android:id="@+id/textViewCenter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewCenter" />
+
+    <TextView
+        android:id="@+id/textViewFront"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Front"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewFront" />
+
+    <ImageView
+        android:id="@+id/imageViewPerson"
+        android:layout_width="51dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFront"
+        app:srcCompat="@drawable/blindperson" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
