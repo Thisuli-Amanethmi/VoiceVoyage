@@ -32,113 +32,53 @@ def thread_function(text):
         speak(text)
     print("Thread terminated gracefully")
 
+def navigation_algorithm(object_list):
+    direction_counts = {'left': 0, 'right': 0, 'mid': 0}
+    object_indices = {'left': None, 'right': None, 'mid': None}
+    direction_mapping = {
+        'left': ['NV.queryLeft', 'NV.queryFarLeft'],
+        'right': ['NV.Right', 'NV.queryFarRight'],
+        'mid': ['NV.queryCenter', 'NV.front']
+    }
 
-def Navigation_algorithm(object_list):
-    left=0
-    right=0
-    mid=0
-    Left_obj=[NV.queryLeft,NV.queryFarLeft]
-    Right_obj=[NV.Right,NV.queryFarRight]
-    Mid_obj=[NV.queryCenter,NV.front]
+    for obj in object_list:
+        for direction, objects in direction_mapping.items():
+            if obj in objects:
+                direction_counts[direction] += 1
+                if object_indices[direction] is None:
+                    object_indices[direction] = object_list.index(obj)
 
-    for index in object_list:
-        if index in Left_obj:
-            left+=1
-            Left_object =object_list.index(index)
-        elif index in Right_obj:
-            right+=1
-            Right_object = object_list.index(index)
-        elif index in Mid_obj:
-            mid+=1
-            Mid_object =object_list.index(index)
+    max_direction = max(direction_counts, key=direction_counts.get)
+    if direction_counts[max_direction] > 0:
+        return max_direction, object_indices[max_direction]
+    return None, None
 
-    if left>right and left>mid:
-        return "Left", Left_object
-    elif right>left and right>mid:
-        return "Right", Right_object
-    elif mid>right and mid>left:
-        return "mid", Mid_object
-    else:
-        return 0,0
+def check_for_turn_back(current_object_list, previous_object_list):
+    return len(current_object_list) >= 2 and len(previous_object_list) >= 2 and \
+           current_object_list[1] in previous_object_list[-2:]
 
+def navigation_algo_part2(current_object_list, previous_object_list):
+    current_orientation, current_object_index = navigation_algorithm(current_object_list)
+    previous_orientation, _ = navigation_algorithm(previous_object_list[-1:])
+    turn_back_detected = check_for_turn_back(current_object_list, previous_object_list)
 
-def CheckForTurnBack(Current_object_list, Previous_object_list):
-    if (len(Current_object_list) >= 2 and len(Previous_object_list) >= 2):
-        if(Current_object_list[-1] == Previous_object_list[-1] and Current_object_list[-2] == Previous_object_list[-2]):
-            TurnBackDetected = True
-            return TurnBackDetected
+    if current_orientation is None or previous_orientation is None:
+        return
 
-        else:
-            TurnBackDetected = False
-            return TurnBackDetected
-    else:
-        TurnBackDetected = False
-        return TurnBackDetected
+    if turn_back_detected:
+        orientation_switch = {'left': 'right', 'right': 'left'}
+        current_orientation = orientation_switch.get(current_orientation, current_orientation)
+        previous_orientation = orientation_switch.get(previous_orientation, previous_orientation)
 
+    announcement = "There is a " + current_object_list[current_object_index]
+    if current_orientation == "mid":
+        side = "right" if previous_orientation == "left" else "left"
+        announcement += " is in your " + side + "."
+    elif current_orientation != previous_orientation:
+        announcement += " is in your right."
 
-def navigation_algo_part2(Current_object_list,Previous_object_List):
-    Current_orientation, Current_object_index = Navigation_algorithm(Current_object_list)
-    Previous_orientation, Previous_object_index = Navigation_algorithm([Previous_object_List[-1]])
-    TurnBackDetected = CheckForTurnBack(Current_object_list, Previous_object_List)
+    return announcement
 
-    if Current_orientation==0 or Previous_orientation==0:
-        Announcement = "hiii"
-        return Announcement # thisuli
-        # pass
-
-    if TurnBackDetected == False:
-        if Current_orientation =="Mid" and Previous_orientation =="Left":
-            Announcement = Current_object_list[Current_object_index] + "is in your right."
-        elif Current_orientation =="Mid" and Previous_orientation =="Right":
-            Announcement = Current_object_list[Current_object_index] +" is in your left."
-        elif Current_orientation =="Left" and Previous_orientation =="Right":
-            Announcement = Current_object_list[Current_object_index] +" is in your right."
-        elif Current_orientation =="Left" and Previous_orientation =="Mid":
-            Announcement = Current_object_list[Current_object_index] +" is in your right."
-        elif Current_orientation =="Right" and Previous_orientation =="Left":
-            Announcement = Current_object_list[Current_object_index] +" is in your right."
-        elif Current_orientation =="Right" and Previous_orientation =="Mid":
-            Announcement = Current_object_list[Current_object_index] +" is in your right."
-        elif (Current_orientation=="Right" and Previous_orientation=="Right") and (Current_object_index!=Previous_orientation):
-            Announcement = Current_object_list[Current_object_index] +" is in your right."
-        elif (Current_orientation=="Left" and Previous_orientation=="Left") and (Current_object_index!=Previous_orientation):
-            Announcement = Current_object_list[Current_object_index] +" is in your Left."
-        else:
-            print(TurnBackDetected,Previous_orientation,Current_orientation)
-            Announcement = "There is a " + Current_object_list[-1]
-            return Announcement
-
-    elif TurnBackDetected == True:
-        if Current_orientation=="Left":
-            Current_orientation=="Right"
-        elif Current_orientation=="right":
-            Current_orientation == "left"
-        if Previous_orientation=="Right":
-            Previous_orientation=="Left"
-        elif Previous_orientation=="Left":
-            Previous_orientation == "Right"
-        if Current_orientation =="Mid" and Previous_orientation =="Left":
-            Announcement = Current_object_list[Current_object_index] + "is in your right."
-        elif Current_orientation =="Mid" and Previous_orientation =="Right":
-            Announcement = Current_object_list[Current_object_index] +" is in your left."
-        elif Current_orientation =="Left" and Previous_orientation =="Right":
-            Announcement = Current_object_list[Current_object_index] +" is in your right."
-        elif Current_orientation =="Left" and Previous_orientation =="Mid":
-            Announcement = Current_object_list[Current_object_index] +" is in your right."
-        elif Current_orientation =="Right" and Previous_orientation =="Left":
-            Announcement = Current_object_list[Current_object_index] +" is in your right."
-        elif Current_orientation =="Right" and Previous_orientation =="Mid":
-            Announcement = Current_object_list[Current_object_index] +" is in your right."
-        elif (Current_orientation=="Right" and Previous_orientation=="Right") and (Current_object_index!=Previous_orientation):
-            Announcement = Current_object_list[Current_object_index] +" is in your right."
-        elif (Current_orientation=="Left" and Previous_orientation=="Left") and (Current_object_index!=Previous_orientation):
-            Announcement = Current_object_list[Current_object_index] +" is in your Left."
-        else:
-            print(TurnBackDetected,Previous_orientation,Current_orientation)
-            Announcement = "There is a " + Current_object_list[-1]
-        return Announcement
-
-    return Announcement # thisuli
 
 
 def main():
