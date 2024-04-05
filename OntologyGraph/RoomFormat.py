@@ -121,13 +121,13 @@ g.add((centerOfRoom, near, farRight))
 g.add((behindYou, safePath, centerOfRoom))
 # Additional paths can be defined similarly based on the room's layout and obstacles
 
+
 print(g.serialize(format='turtle'))
 
 from rdflib.extras.external_graph_libs import rdflib_to_networkx_graph
 import networkx as nx
 from pyvis.network import Network
 
-# Assuming 'g' is your RDFLib graph
 G = rdflib_to_networkx_graph(g)
 
 # Initialize a PyVis network object
@@ -137,6 +137,23 @@ nt.show("rdf_graph.html")
 
 
 
+from rdflib import Graph
+import os
+
+# Assuming 'g' is your RDF graph
+file_path = "E:\\2nd year\\Sem2\\DSGP\\MainGitHubRepo\\VoiceVoyage\\OntologyGraph\\mydata.rdf"
+
+# Check if the directory exists, if not, create it
+directory = os.path.dirname(file_path)
+if not os.path.exists(directory):
+    os.makedirs(directory)
+
+try:
+    # Serialize your graph into a binary format for quicker access
+    g.serialize(destination=file_path, format='application/rdf+xml')
+    print("File saved successfully.")
+except Exception as e:
+    print(f"An error occurred: {e}")
 
 
 
