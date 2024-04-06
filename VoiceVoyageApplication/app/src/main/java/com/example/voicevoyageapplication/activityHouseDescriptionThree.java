@@ -104,10 +104,10 @@ public class activityHouseDescriptionThree extends AppCompatActivity {
 
     private void roomFormat(String inFront, String left, String farLeft, String right, String farRight, String behind, String center,
                             String windowNearDoor, String windowLeft, String windowRight, String windowFront) {
-        new roomFormatSave().execute(inFront, left, farLeft, right, farRight, behind, center, windowNearDoor, windowLeft, windowRight, windowFront);
+        new save_to_db().execute(inFront, left, farLeft, right, farRight, behind, center, windowNearDoor, windowLeft, windowRight, windowFront);
     }
 
-    private class roomFormatSave extends AsyncTask<String, Void, String> {
+    private class save_to_db extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             String inFront = params[0];
@@ -122,7 +122,7 @@ public class activityHouseDescriptionThree extends AppCompatActivity {
             String windowRight = params[9];
             String windowFront = params[10];
 
-            String serverUrl = "http://192.168.1.12:5000/room_format" +
+            String serverUrl = "http://192.168.1.12:5000/save_to_db" +
                     "?in_front=" + inFront +
                     "&to_the_left=" + left +
                     "&far_left=" + farLeft +
