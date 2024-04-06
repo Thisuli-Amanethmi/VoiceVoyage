@@ -1,5 +1,5 @@
-# rdf_file_path = "E:\\2nd year\\Sem2\\DSGP\\MainGitHubRepo\\VoiceVoyage\\OntologyGraph\\mydata.rdf"
-rdf_file_path = "C:\\Users\\Thisuli Amanethmi\\IdeaProjects\\demo\\VoiceVoyage\\OntologyGraph\\mydata.rdf"
+rdf_file_path = "E:\\2nd year\\Sem2\\DSGP\\MainGitHubRepo\\VoiceVoyage\\OntologyGraph\\mydata.rdf"
+#rdf_file_path = "C:\\Users\\Thisuli Amanethmi\\IdeaProjects\\demo\\VoiceVoyage\\OntologyGraph\\mydata.rdf"
 
 # Reading the content of the RDF file into a string
 with open(rdf_file_path, 'r', encoding='utf-8') as file:
@@ -54,7 +54,7 @@ def Spatial_relationships(relationship):
             else:
                 Objects_with_spatial_relation.append(get_description_by_id(obj['id']))
                 Objects_with_spatial_relation.append(get_description_by_id(obj['adjacent_to']))
-
+        print(Objects_with_spatial_relation)
     return Objects_with_spatial_relation,relationship
 
 

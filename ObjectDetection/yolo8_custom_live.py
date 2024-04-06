@@ -15,6 +15,12 @@ Previous_object_list = []
 Current_object_list = []
 Spatial_relationship = {}
 
+
+# Initialize variables to store the last state of detected objects and their spatial relationships
+last_detected_objects = set()
+last_spatial_relationships = {}
+
+
 ######################
 # Get spatial relationship with objects using an ontology
 def Get_spatial_relationship_with_objects():
@@ -87,6 +93,9 @@ def navigation_algo_part2(current_object_list, previous_object_list):
     return announcement
 
 
+def has_spatial_relationship_changed(current_spatial_relationships, last_spatial_relationships):
+    """Compare current spatial relationships with the last spatial relationships to determine if there's a change."""
+    return current_spatial_relationships != last_spatial_relationships
 
 class_list = ["bed","bookshelf","chair","clothes-rack","coffee-table","commode","cupboard","door","dressing-table","lamp","oven","pantry-cupboards","refrigerator","shoe-rack","sink","sofa","staircase","stove","table","tv","wall-art","washing-machine","window"]
 
@@ -114,6 +123,7 @@ cap = cv2.VideoCapture(0)
 if not cap.isOpened():
     print("Cannot open camera")
     exit()
+
 
 while True:
     # Capture frame-by-frame
@@ -180,7 +190,6 @@ while True:
                 detected_classes.append(class_list[int(clsID)])
 
 
-
             # Announce detected objects if any
             if detected_classes:
                 if type(detected_classes)==list:
@@ -190,15 +199,27 @@ while True:
                 else:
                     Current_object_list.append(detected_classes)
                     Previous_object_list.append(detected_classes)
-            Spatial_relation_dict=Get_spatial_relationship_with_objects()
-            print(Spatial_relation_dict)
-            Spatial_announcement= Check_the_spatial_relationship_of_current_objects(Spatial_relation_dict,Current_object_list)
-            announcement=navigation_algo_part2(Current_object_list,Previous_object_list)
-            if Spatial_announcement!=" ":
-                engine.say(Spatial_announcement+announcement)
-            else:
-                engine.say(announcement)
-            engine.runAndWait()
+            current_detected_objects = set(Current_object_list)  # Convert current detected objects list to a set for easy comparison
+
+            # Retrieve current spatial relationships
+            current_spatial_relationships = Get_spatial_relationship_with_objects()
+
+            # Check for changes in detected objects or their spatial relationships
+            if (current_detected_objects != last_detected_objects or has_spatial_relationship_changed(current_spatial_relationships, last_spatial_relationships)):
+
+                # Update last detected objects and their spatial relationships for future comparisons
+                last_detected_objects = current_detected_objects
+                last_spatial_relationships = current_spatial_relationships
+
+                # Construct announcements based on the current state
+                Spatial_announcement = Check_the_spatial_relationship_of_current_objects(current_spatial_relationships,
+                                                                                         list(current_detected_objects))
+                announcement = navigation_algo_part2(list(current_detected_objects), list(last_detected_objects))
+
+                full_announcement = (Spatial_announcement + " " + announcement).strip()
+                if full_announcement:
+                    engine.say(full_announcement)
+                    engine.runAndWait()
             Current_object_list=[]
 
     # Display the resulting frame

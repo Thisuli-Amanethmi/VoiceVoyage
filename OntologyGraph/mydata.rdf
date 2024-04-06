@@ -1,60 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rdf:RDF
-   xmlns:ns1="http://example.org/spatial/"
-   xmlns:ns2="http://example.org/mynamespace/"
+   xmlns:ns1="http://example.org/mynamespace/"
+   xmlns:ns2="http://example.org/spatial/"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 >
-  <rdf:Description rdf:about="http://example.org/room/toTheLeft">
-    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
-    <ns2:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">chair</ns2:description>
-    <ns1:adjacentTo rdf:resource="http://example.org/room/windowOnLeftWall"/>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://example.org/room/inFront">
-    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
-    <ns2:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">door</ns2:description>
-    <ns1:oppositeOf rdf:resource="http://example.org/room/behindYou"/>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://example.org/room/farRight">
-    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
-    <ns2:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">window</ns2:description>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://example.org/room/toTheRight">
-    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
-    <ns2:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sofa</ns2:description>
-    <ns1:adjacentTo rdf:resource="http://example.org/room/windowOnRightWall"/>
-  </rdf:Description>
   <rdf:Description rdf:about="http://example.org/room/centerOfRoom">
     <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
-    <ns2:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">table</ns2:description>
-    <ns1:near rdf:resource="http://example.org/room/inFront"/>
-    <ns1:near rdf:resource="http://example.org/room/toTheLeft"/>
-    <ns1:near rdf:resource="http://example.org/room/toTheRight"/>
-    <ns1:near rdf:resource="http://example.org/room/farLeft"/>
-    <ns1:near rdf:resource="http://example.org/room/farRight"/>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://example.org/room/behindYou">
-    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
-    <ns2:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">coffee-table</ns2:description>
-    <ns1:safePath rdf:resource="http://example.org/room/centerOfRoom"/>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://example.org/room/windowNearDoor">
-    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
-    <ns2:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">no</ns2:description>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://example.org/room/farLeft">
-    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
-    <ns2:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">tv</ns2:description>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://example.org/room/windowOnLeftWall">
-    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
-    <ns2:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">no</ns2:description>
-  </rdf:Description>
-  <rdf:Description rdf:about="http://example.org/room/windowOnFrontWall">
-    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
-    <ns2:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">no</ns2:description>
+    <ns1:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-</ns1:description>
+    <ns2:near rdf:resource="http://example.org/room/inFront"/>
+    <ns2:near rdf:resource="http://example.org/room/toTheLeft"/>
+    <ns2:near rdf:resource="http://example.org/room/toTheRight"/>
+    <ns2:near rdf:resource="http://example.org/room/farLeft"/>
+    <ns2:near rdf:resource="http://example.org/room/farRight"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://example.org/room/windowOnRightWall">
     <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
-    <ns2:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">yes</ns2:description>
+    <ns1:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">no</ns1:description>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/room/windowNearDoor">
+    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
+    <ns1:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">no</ns1:description>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/room/inFront">
+    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
+    <ns1:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">table</ns1:description>
+    <ns2:oppositeOf rdf:resource="http://example.org/room/behindYou"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/room/farLeft">
+    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
+    <ns1:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sink</ns1:description>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/room/farRight">
+    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
+    <ns1:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-</ns1:description>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/room/behindYou">
+    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
+    <ns1:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">staricase</ns1:description>
+    <ns2:safePath rdf:resource="http://example.org/room/centerOfRoom"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/room/toTheRight">
+    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
+    <ns1:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">chair</ns1:description>
+    <ns2:adjacentTo rdf:resource="http://example.org/room/windowOnRightWall"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/room/toTheLeft">
+    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
+    <ns1:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">pantry-cupboards</ns1:description>
+    <ns2:adjacentTo rdf:resource="http://example.org/room/windowOnLeftWall"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/room/windowOnFrontWall">
+    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
+    <ns1:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">yes</ns1:description>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/room/windowOnLeftWall">
+    <rdf:type rdf:resource="http://example.org/mynamespace/Object"/>
+    <ns1:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">no</ns1:description>
   </rdf:Description>
 </rdf:RDF>

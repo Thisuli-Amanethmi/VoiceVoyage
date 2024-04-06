@@ -141,8 +141,8 @@ from rdflib import Graph
 import os
 
 # Assuming 'g' is your RDF graph
-# file_path = "E:\\2nd year\\Sem2\\DSGP\\MainGitHubRepo\\VoiceVoyage\\OntologyGraph\\mydata.rdf"
-file_path = "C:\\Users\\Thisuli Amanethmi\\IdeaProjects\\demo\\VoiceVoyage\\OntologyGraph\\mydata.rdf"
+file_path = "E:\\2nd year\\Sem2\\DSGP\\MainGitHubRepo\\VoiceVoyage\\OntologyGraph\\mydata.rdf"
+#file_path = "C:\\Users\\Thisuli Amanethmi\\IdeaProjects\\demo\\VoiceVoyage\\OntologyGraph\\mydata.rdf"
 
 # Check if the directory exists, if not, create it
 directory = os.path.dirname(file_path)
