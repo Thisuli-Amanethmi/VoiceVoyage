@@ -8,13 +8,8 @@ from ObjectDetection import OntologyExtraction as OE
 
 
 # Initialize the text-to-speech engine
-
 engine = pyttsx3.init()
 
-<<<<<<< Updated upstream
-
-#Get spatial relationship with objects using an ontology
-=======
 # Lists to keep track of objects
 Previous_object_list = []
 Current_object_list = []
@@ -22,7 +17,6 @@ Spatial_relationship = {}
 
 ######################
 # Get spatial relationship with objects using an ontology
->>>>>>> Stashed changes
 def Get_spatial_relationship_with_objects():
     Spatial_relationship = {"Object1": [], "relationship": [], "Object2": []}
     relationships = ["oppositeOf", "adjacentTo", "near"]
@@ -36,13 +30,7 @@ def Get_spatial_relationship_with_objects():
     return Spatial_relationship
 ############
 
-<<<<<<< Updated upstream
-
-def Check_the_spacial_relationship_of_current_objects(Spatial_relationship,Current_objects):
-    # Initialize a list to hold announcements
-=======
 def Check_the_spatial_relationship_of_current_objects(Spatial_relationship, Current_objects):
->>>>>>> Stashed changes
     announcements = []
 
     for current_object in Current_objects:
@@ -50,31 +38,16 @@ def Check_the_spatial_relationship_of_current_objects(Spatial_relationship, Curr
             Index = Spatial_relationship["Object1"].index(current_object)
             relation = Spatial_relationship["relationship"][Index]
             obj2 = Spatial_relationship["Object2"][Index]
-<<<<<<< Updated upstream
-            announcement_for_spatial_relation = "The " + current_object + " is " + relation + " " + obj2
-            announcements = announcements.append(announcement_for_spatial_relation)
-        # Check if the current object is in the Object2 list
-=======
             announcements.append(f"The {current_object} is {relation} {obj2}")
->>>>>>> Stashed changes
         elif current_object in Spatial_relationship["Object2"]:
             Index = Spatial_relationship["Object2"].index(current_object)
             relation = Spatial_relationship["relationship"][Index]
             obj1 = Spatial_relationship["Object1"][Index]
-<<<<<<< Updated upstream
-            announcement_for_spatial_relation = "The " + current_object + " is " + relation + " to " + obj1
-            announcements = announcements.append(announcement_for_spatial_relation)
-=======
             announcements.append(f"The {current_object} is {relation} to {obj1}")
->>>>>>> Stashed changes
 
     return ", ".join(announcements) if announcements else " "
 
-<<<<<<< Updated upstream
-
-=======
 ###################
->>>>>>> Stashed changes
 def navigation_algorithm(object_list):
     direction_counts = {'left': 0, 'right': 0, 'mid': 0}
     object_indices = {'left': [], 'right': [], 'mid': []}
@@ -94,15 +67,10 @@ def navigation_algorithm(object_list):
     return max_direction, object_indices[max_direction][0] if direction_counts[max_direction] > 0 else 0
 
 
-
 def check_for_turn_back(current_object_list, previous_object_list):
     return set(current_object_list[-2:]).intersection(set(previous_object_list[-2:]))
 
-<<<<<<< Updated upstream
-
-=======
 ################################################
->>>>>>> Stashed changes
 def navigation_algo_part2(current_object_list, previous_object_list):
     if not current_object_list or not previous_object_list:
         return "None part 2"
@@ -113,27 +81,13 @@ def navigation_algo_part2(current_object_list, previous_object_list):
     if check_for_turn_back(current_object_list, previous_object_list):
         orientation_switch = {'left': 'right', 'right': 'left', 'mid': 'mid'}
         current_orientation = orientation_switch.get(current_orientation, current_orientation)
-<<<<<<< Updated upstream
-        previous_orientation = orientation_switch.get(previous_orientation, previous_orientation)
-    announcement = " "
-
-    if current_orientation == "mid":
-        side = "right" if previous_orientation == "left" else "left"
-        announcement = " is in your " + side + "."
-    elif current_orientation != previous_orientation:
-        announcement = " is in your right."
-=======
 
     announcement = f"There is a {current_object_list[current_object_index]} in your {current_orientation}." if current_object_index is not None else ""
->>>>>>> Stashed changes
 
     return announcement
 
 
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 class_list = ["bed","bookshelf","chair","clothes-rack","coffee-table","commode","cupboard","door","dressing-table","lamp","oven","pantry-cupboards","refrigerator","shoe-rack","sink","sofa","staircase","stove","table","tv","wall-art","washing-machine","window"]
 
 
@@ -170,19 +124,12 @@ while True:
         print("Can't receive frame (stream end?). Exiting ...")
         break
 
-<<<<<<< Updated upstream
-    # perform some slow operation
-    time.sleep(2)
-
-    cv2.imshow('frame', frame)
-=======
     # peform some slow operation
     #time.sleep(2)
 
     cv2.imshow('frame', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
->>>>>>> Stashed changes
 
     # resize the frame | small frame optimise the run.
     #frame = cv2.resize(frame, (frame_wid, frame_hyt))
@@ -190,8 +137,10 @@ while True:
     # Predict on image
     detect_params = model.predict(source=[frame], conf=0.45, save=False)
 
+
     # Convert tensor array to numpy
     DP = detect_params[0].numpy()
+
 
     if len(DP) != 0:
         detected_classes = []
@@ -211,6 +160,7 @@ while True:
                 3,
             )
 
+
             # Display class name and confidfence
             font = cv2.FONT_HERSHEY_COMPLEX
             cv2.putText(
@@ -228,6 +178,8 @@ while True:
             # Collect detected classes for speech
             if class_list[int(clsID)] not in detected_classes:
                 detected_classes.append(class_list[int(clsID)])
+
+
 
             # Announce detected objects if any
             if detected_classes:
