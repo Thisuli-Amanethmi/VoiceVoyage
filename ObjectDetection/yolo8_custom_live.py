@@ -7,11 +7,13 @@ import random
 import pyttsx3
 import OntologyExtraction as OE
 # Initialize the text-to-speech engine
+
 engine = pyttsx3.init()
 Previous_object_list=[]
 Current_object_list=[]
 Spatial_relationship={}
 announcement=""
+
 
 #Get spatial relationship with objects using an ontology
 def Get_spatial_relationship_with_objects():
@@ -30,6 +32,7 @@ def Get_spatial_relationship_with_objects():
                 Spatial_relationship["relationship"].append(relation)
     return Spatial_relationship
 
+
 def Check_the_spacial_relationship_of_current_objects(Spatial_relationship,Current_objects):
     # Initialize a list to hold announcements
     announcements = []
@@ -42,20 +45,21 @@ def Check_the_spacial_relationship_of_current_objects(Spatial_relationship,Curre
             relation = Spatial_relationship["relationship"][Index]
             obj2 = Spatial_relationship["Object2"][Index]
             announcement_for_spatial_relation = "The " + current_object + " is " + relation + " " + obj2
-            announcements=announcements.append(announcement_for_spatial_relation)
+            announcements = announcements.append(announcement_for_spatial_relation)
         # Check if the current object is in the Object2 list
         elif current_object in Spatial_relationship["Object2"]:
             Index = Spatial_relationship["Object2"].index(current_object)
             relation = Spatial_relationship["relationship"][Index]
             obj1 = Spatial_relationship["Object1"][Index]
             announcement_for_spatial_relation = "The " + current_object + " is " + relation + " to " + obj1
-            announcements=announcement.append(announcement_for_spatial_relation)
+            announcements = announcements.append(announcement_for_spatial_relation)
 
     # Check if any announcements were added; if not, return a default message
     if not announcements:
         return " "
 
     return announcements
+
 
 def navigation_algorithm(object_list):
     direction_counts = {'left': 0, 'right': 0, 'mid': 0}
@@ -79,9 +83,11 @@ def navigation_algorithm(object_list):
         return max_direction, object_indices[max_direction]
     return 0, 0
 
+
 def check_for_turn_back(current_object_list, previous_object_list):
     return len(current_object_list) >= 2 and len(previous_object_list) >= 2 and \
            current_object_list[1] in previous_object_list[-2:]
+
 
 def navigation_algo_part2(current_object_list, previous_object_list):
     current_orientation, current_object_index = navigation_algorithm(current_object_list)
@@ -95,8 +101,8 @@ def navigation_algo_part2(current_object_list, previous_object_list):
         orientation_switch = {'left': 'right', 'right': 'left'}
         current_orientation = orientation_switch.get(current_orientation, current_orientation)
         previous_orientation = orientation_switch.get(previous_orientation, previous_orientation)
-
     announcement = " "
+
     if current_orientation == "mid":
         side = "right" if previous_orientation == "left" else "left"
         announcement = " is in your " + side + "."
@@ -104,8 +110,6 @@ def navigation_algo_part2(current_object_list, previous_object_list):
         announcement = " is in your right."
 
     return announcement
-
-
 
 
 class_list = ["bed","bookshelf","chair","clothes-rack","coffee-table","commode","cupboard","door","dressing-table","lamp","oven","pantry-cupboards","refrigerator","shoe-rack","sink","sofa","staircase","stove","table","tv","wall-art","washing-machine","window"]
@@ -144,11 +148,10 @@ while True:
         print("Can't receive frame (stream end?). Exiting ...")
         break
 
-    # peform some slow operation
+    # perform some slow operation
     time.sleep(2)
 
     cv2.imshow('frame', frame)
-
 
     # resize the frame | small frame optimise the run.
     #frame = cv2.resize(frame, (frame_wid, frame_hyt))
@@ -156,10 +159,8 @@ while True:
     # Predict on image
     detect_params = model.predict(source=[frame], conf=0.45, save=False)
 
-
     # Convert tensor array to numpy
     DP = detect_params[0].numpy()
-
 
     if len(DP) != 0:
         detected_classes = []
@@ -179,7 +180,6 @@ while True:
                 3,
             )
 
-
             # Display class name and confidfence
             font = cv2.FONT_HERSHEY_COMPLEX
             cv2.putText(
@@ -197,8 +197,6 @@ while True:
             # Collect detected classes for speech
             if class_list[int(clsID)] not in detected_classes:
                 detected_classes.append(class_list[int(clsID)])
-
-
 
             # Announce detected objects if any
             if detected_classes:

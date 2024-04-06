@@ -1,13 +1,21 @@
 package com.example.voicevoyageapplication;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class activityHouseDescriptionThree extends AppCompatActivity {
     Button previousButton, registerButton;
@@ -67,6 +75,8 @@ public class activityHouseDescriptionThree extends AppCompatActivity {
                 String windowRight = windorRightEditText.getText().toString();
                 String windowFront = windowFrontEditText.getText().toString();
 
+                roomFormat(inFront, left, farLeft, right, farRight, behind, center, windowNearDoor, windowLeft, windowRight, windowFront);
+
                 Boolean insert = db.insertDataMap(userName, inFront, left, farLeft, right, farRight, behind, center);
 
                 if(insert){ // true
@@ -91,4 +101,73 @@ public class activityHouseDescriptionThree extends AppCompatActivity {
             }
         });
     }
+
+    private void roomFormat(String inFront, String left, String farLeft, String right, String farRight, String behind, String center,
+                            String windowNearDoor, String windowLeft, String windowRight, String windowFront) {
+        new roomFormatSave().execute(inFront, left, farLeft, right, farRight, behind, center, windowNearDoor, windowLeft, windowRight, windowFront);
+    }
+
+    private class roomFormatSave extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            String inFront = params[0];
+            String left = params[1];
+            String farLeft = params[2];
+            String right = params[3];
+            String farRight = params[4];
+            String behind = params[5];
+            String center = params[6];
+            String windowNearDoor = params[7];
+            String windowLeft = params[8];
+            String windowRight = params[9];
+            String windowFront = params[10];
+
+            String serverUrl = "http://192.168.1.12:5000/room_format" +
+                    "?in_front=" + inFront +
+                    "&to_the_left=" + left +
+                    "&far_left=" + farLeft +
+                    "&to_the_right=" + right +
+                    "&far_right=" + farRight +
+                    "&behind_you=" + behind +
+                    "&center=" + center +
+                    "&window_near_door=" + windowNearDoor +
+                    "&window_on_left_wall=" + windowLeft +
+                    "&window_on_right_wall=" + windowRight +
+                    "&window_on_front_wall=" + windowFront;  // home wifi
+
+            // String serverUrl = "http://172.27.41.213:5000/room_format"; // IIT server address
+            // String serverUrl = "http://127.0.0.1:5000/room_format"; // local host server address
+            String response = "";
+
+            try {
+                URL url = new URL(serverUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+
+                // Handle connection and response
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        stringBuilder.append(line).append("\n");
+                    }
+                    reader.close();
+                    response = stringBuilder.toString();
+
+                    Log.d("NET", response);
+                } else {
+                    Log.e("RoomFormatSave", "Error: HTTP " + connection.getResponseCode());
+                }
+                connection.disconnect();
+            } catch (IOException e) {
+                Log.e("RoomFormatSave", "Error: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+            return response;
+        }
+    }
+
 }

@@ -1,4 +1,5 @@
-rdf_file_path = "E:\\2nd year\\Sem2\\DSGP\\MainGitHubRepo\\VoiceVoyage\\OntologyGraph\\mydata.rdf"
+# rdf_file_path = "E:\\2nd year\\Sem2\\DSGP\\MainGitHubRepo\\VoiceVoyage\\OntologyGraph\\mydata.rdf"
+rdf_file_path = "C:\\Users\\Thisuli Amanethmi\\IdeaProjects\\demo\\VoiceVoyage\\OntologyGraph\\mydata.rdf"
 
 # Reading the content of the RDF file into a string
 with open(rdf_file_path, 'r', encoding='utf-8') as file:
@@ -21,6 +22,8 @@ namespaces = {
     'ns1': 'http://example.org/spatial/',
     'ns2': 'http://example.org/mynamespace/'
 }
+
+
 def Spatial_relationships(relationship):
     # Initialize a list to hold objects with an 'adjacentTo' relationship
     adjacent_objects = []
@@ -53,6 +56,7 @@ def Spatial_relationships(relationship):
                 Objects_with_spatial_relation.append(get_description_by_id(obj['adjacent_to']))
 
     return Objects_with_spatial_relation,relationship
+
 
 def get_description_by_id(object_id):
     # Find the object by its ID
