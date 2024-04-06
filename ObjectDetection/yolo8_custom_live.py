@@ -10,16 +10,13 @@ from ObjectDetection import OntologyExtraction as OE
 # Initialize the text-to-speech engine
 engine = pyttsx3.init()
 
+# Previous announcement tracking
+last_announcement = None
+
 # Lists to keep track of objects
 Previous_object_list = []
 Current_object_list = []
 Spatial_relationship = {}
-
-
-# Initialize variables to store the last state of detected objects and their spatial relationships
-last_detected_objects = set()
-last_spatial_relationships = {}
-
 
 ######################
 # Get spatial relationship with objects using an ontology
@@ -92,10 +89,14 @@ def navigation_algo_part2(current_object_list, previous_object_list):
 
     return announcement
 
+# Function to announce without repetition
+def announce_without_repetition(announcement):
+    global last_announcement  # Reference the global variable to keep track of the last announcement
+    if announcement != last_announcement:
+        engine.say(announcement)
+        engine.runAndWait()
+        last_announcement = announcement  # Update the last announcement
 
-def has_spatial_relationship_changed(current_spatial_relationships, last_spatial_relationships):
-    """Compare current spatial relationships with the last spatial relationships to determine if there's a change."""
-    return current_spatial_relationships != last_spatial_relationships
 
 class_list = ["bed","bookshelf","chair","clothes-rack","coffee-table","commode","cupboard","door","dressing-table","lamp","oven","pantry-cupboards","refrigerator","shoe-rack","sink","sofa","staircase","stove","table","tv","wall-art","washing-machine","window"]
 
@@ -123,7 +124,6 @@ cap = cv2.VideoCapture(0)
 if not cap.isOpened():
     print("Cannot open camera")
     exit()
-
 
 while True:
     # Capture frame-by-frame
@@ -190,6 +190,7 @@ while True:
                 detected_classes.append(class_list[int(clsID)])
 
 
+
             # Announce detected objects if any
             if detected_classes:
                 if type(detected_classes)==list:
@@ -199,27 +200,16 @@ while True:
                 else:
                     Current_object_list.append(detected_classes)
                     Previous_object_list.append(detected_classes)
-            current_detected_objects = set(Current_object_list)  # Convert current detected objects list to a set for easy comparison
+            Spatial_relation_dict=Get_spatial_relationship_with_objects()
+            print(Spatial_relation_dict)
+            Spatial_announcement= Check_the_spatial_relationship_of_current_objects(Spatial_relation_dict,Current_object_list)
+            navigation_announcement=navigation_algo_part2(Current_object_list,Previous_object_list)
+            # Combine the spatial and navigation announcements
+            full_announcement = f"{Spatial_announcement}. {navigation_announcement}".strip()
 
-            # Retrieve current spatial relationships
-            current_spatial_relationships = Get_spatial_relationship_with_objects()
-
-            # Check for changes in detected objects or their spatial relationships
-            if (current_detected_objects != last_detected_objects or has_spatial_relationship_changed(current_spatial_relationships, last_spatial_relationships)):
-
-                # Update last detected objects and their spatial relationships for future comparisons
-                last_detected_objects = current_detected_objects
-                last_spatial_relationships = current_spatial_relationships
-
-                # Construct announcements based on the current state
-                Spatial_announcement = Check_the_spatial_relationship_of_current_objects(current_spatial_relationships,
-                                                                                         list(current_detected_objects))
-                announcement = navigation_algo_part2(list(current_detected_objects), list(last_detected_objects))
-
-                full_announcement = (Spatial_announcement + " " + announcement).strip()
-                if full_announcement:
-                    engine.say(full_announcement)
-                    engine.runAndWait()
+            # Announce without repetition
+            if full_announcement.strip() and full_announcement != " . ":
+                announce_without_repetition(full_announcement)
             Current_object_list=[]
 
     # Display the resulting frame
