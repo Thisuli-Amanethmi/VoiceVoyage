@@ -119,13 +119,14 @@ def navigation_algo_part2(current_object_list, previous_object_list):
 def announce_without_repetition(announcement):
     global last_announcement  # Reference the global variable to keep track of the last announcement
     if announcement != last_announcement:
-        # engine.say(announcement)
-        # engine.runAndWait()
+        print("3: ", announcement)
+        engine.say(announcement)
+        engine.runAndWait()
         # Start a new thread to speak the announcement
-        thread = threading.Thread(target=thread_function, args=(announcement,))
-        thread.start()
+        # thread = threading.Thread(target=thread_function, args=(announcement,))
+        # thread.start()
         last_announcement = announcement  # Update the last announcement
-        engine.endLoop()
+        # engine.endLoop()
 
     # engine.endLoop()
 
@@ -135,9 +136,9 @@ def main():
     Current_object_list = []
     last_detected_objects = set()
 
-    class_list = ["bed", "bookshelf", "chair", "clothes-rack", "coffeetable", "commode", "cupboard", "door",
-                  "dressing-table", "lamp", "oven", "pantry-cupboards", "refrigerator", "shoe-rack", "sink", "sofa",
-                  "staircase", "stove", "table", "tv", "wall-art", "washing-machine", "window"]
+    class_list = ["bed", "bookshelf", "chair", "clothesrack", "coffeetable", "commode", "cupboard", "door",
+                  "dressingtable", "lamp", "oven", "pantrycupboards", "refrigerator", "shoerack", "sink", "sofa",
+                  "staircase", "stove", "table", "tv", "wall-art", "washingmachine", "window"]
     # print(class_list)
 
     # Generate random colors for class list
@@ -218,6 +219,7 @@ def main():
                     (255, 255, 255),
                     2,
                 )
+
                 # Collect detected classes for speech
                 if class_list[int(clsID)] not in detected_classes:
                     detected_classes.append(class_list[int(clsID)])
@@ -231,20 +233,31 @@ def main():
                     else:
                         Current_object_list.append(detected_classes)
                         Previous_object_list.append(detected_classes)
+
                 Spatial_relation_dict = Get_spatial_relationship_with_objects()
                 print(Spatial_relation_dict)
-                Spatial_announcement = Check_the_spatial_relationship_of_current_objects(Spatial_relation_dict,
-                                                                                         Current_object_list)
+
+                Spatial_announcement = Check_the_spatial_relationship_of_current_objects(Spatial_relation_dict, Current_object_list)
+                print("Spatial announcement: ", Spatial_announcement)
+
                 navigation_announcement = navigation_algo_part2(Current_object_list, Previous_object_list)
+                print("navigation announcement: ", navigation_announcement)
+
                 # Combine the spatial and navigation announcements
                 full_announcement = f"{Spatial_announcement}. {navigation_announcement}".strip()
+                print("1 full announcement: ", full_announcement)
 
                 # Announce without repetition
                 if full_announcement.strip() and full_announcement != " . ":
-                    announce_without_repetition(full_announcement)
+                    # announce_without_repetition(full_announcement)
+                    print("2 full announcement: ", full_announcement)
 
-                # engine.endLoop()
-                Current_object_list = []
+                    # Start a new thread to speak the announcement
+                    thread = threading.Thread(target=announce_without_repetition, args=(full_announcement,))
+                    thread.start()
+
+            # engine.endLoop()
+            Current_object_list = []
 
         # Display the resulting frame
         cv2.imshow('ObjectDetection', frame)

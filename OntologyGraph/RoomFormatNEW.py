@@ -41,7 +41,7 @@ def room_format_print(in_front, to_the_left, far_left, to_the_right, far_right, 
 
 
 from rdflib import Graph, Literal, RDF, URIRef
-from rdflib.namespace import  XSD
+from rdflib.namespace import XSD
 from rdflib.namespace import Namespace
 
 MYNS = Namespace("http://example.org/mynamespace/")
