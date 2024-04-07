@@ -88,8 +88,8 @@ public class activityNavigation extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... voids) {
             String serverUrl = "http://192.168.1.12:5000/start_detection"; // home wifi
-            // String serverUrl = "http://172.27.41.213:5000/detect_objects"; // IIT server address
-            // String serverUrl = "http://127.0.0.1:5000/detect_objects"; // local host server address
+            // String serverUrl = "http://172.27.41.213:5000/start_detection"; // IIT server address
+            // String serverUrl = "http://127.0.0.1:5000/start_detection"; // local host server address
             String response = "";
 
             try {
@@ -128,8 +128,8 @@ public class activityNavigation extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... voids) {
             String serverUrl = "http://192.168.1.12:5000/stop_detection"; // home wifi
-            // String serverUrl = "http://172.27.41.213:5000/detect_objects"; // IIT server address
-            // String serverUrl = "http://127.0.0.1:5000/detect_objects"; // local host server address
+            // String serverUrl = "http://172.27.41.213:5000/stop_detection"; // IIT server address
+            // String serverUrl = "http://127.0.0.1:5000/stop_detection"; // local host server address
             String response = "";
 
             try {
@@ -162,54 +162,5 @@ public class activityNavigation extends AppCompatActivity {
             return response;
         }
     }
-
-
-//    private void startDetection() {
-//        new HttpGetTask().execute("http://192.168.1.12:5000/start_detection");
-//        isDetectionRunning = true;
-//    }
-
-//    private void stopDetection() {
-//        isDetectionRunning = false;
-//        new HttpGetTask().execute("http://192.168.1.12:5000/stop_detection");
-//    }
-
-//    // AsyncTask to handle HTTP GET requests to the Flask server (consider using a library for network calls)
-//    private class HttpGetTask extends AsyncTask<String, Void, String> {
-//
-//        @Override
-//        protected String doInBackground(String... urls) {
-//            String urlString = urls[0];
-//            try {
-//                URL url = new URL(urlString);
-//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//                conn.setRequestMethod("GET");
-//                conn.setDoOutput(true);
-//
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//                StringBuilder sb = new StringBuilder();
-//                String line;
-//
-//                while ((line = reader.readLine()) != null) {
-//                    sb.append(line).append("\n");
-//                }
-//
-//                reader.close();
-//                return sb.toString().trim();
-//            } catch (Exception e) {
-//                Log.e("HttpGetTask", "Error: " + e.getMessage());
-//                return null;
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//            super.onPostExecute(result);
-//            // Handle the response from the server (if needed)
-//            if (result != null) {
-//                Log.i("HttpGetTask", "Response: " + result);
-//            }
-//        }
-//    }
 
 }

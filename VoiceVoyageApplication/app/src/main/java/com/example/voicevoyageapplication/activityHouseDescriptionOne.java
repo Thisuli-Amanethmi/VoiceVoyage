@@ -33,7 +33,7 @@ public class activityHouseDescriptionOne extends AppCompatActivity {
         String userName = getIntent().getStringExtra("USER_NAME");
 
         // Display user name in greetingTextView
-        greetingTextView.setText("Hi, " + userName + " !");
+        // greetingTextView.setText("Hi, " + userName + " !");
 
         // Handle button click
         nextButton.setOnClickListener(new View.OnClickListener() {
