@@ -86,4 +86,35 @@ public class databaseUserDetails extends SQLiteOpenHelper {
             return false;
     }
 
+    public String getEmail(String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT email FROM users WHERE username = ?", new String[] { username });
+
+        int col_index = cursor.getColumnIndex("email");
+        String email = (col_index >= 0 && cursor.moveToFirst()) ? cursor.getString(col_index) : "";
+
+        cursor.close();
+        return email;
+    }
+
+    public boolean updateByEmail(String email, String newUsername, String newPassword) {
+        ContentValues values = new ContentValues();
+        values.put("username", newUsername);
+        values.put("password", newPassword);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        long i = db.update("users", values, "email = ?", new String[] { email });
+
+        return i > 0;
+    }
+
+    public boolean updateByEmail(String email, String newUsername) {
+        ContentValues values = new ContentValues();
+        values.put("username", newUsername);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        long i = db.update("users", values, "email = ?", new String[] { email });
+
+        return i > 0;
+    }
 }

@@ -40,6 +40,9 @@ public class activityLogIn extends AppCompatActivity {
                     Boolean checkUserNamePassword = db.checkUserNamePassword(user, userPassword);
 
                     if(checkUserNamePassword==true) {
+                        UserManager userManager = UserManager.getInstance();
+                        userManager.signIn(user, db);
+
                         Toast.makeText(activityLogIn.this, "Log in successfull", Toast.LENGTH_SHORT).show();
 
                         // Pass the data to the next activity
