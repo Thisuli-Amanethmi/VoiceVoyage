@@ -100,7 +100,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="16dp"
-        android:text="03 - The permissible object categories are 'bed', 'bookshelf', 'chair', 'clothes-rack', 'coffee-table', 'commode', 'cupboard', 'door', 'dressing-table', 'lamp', 'oven', 'pantry-cupboards', 'refrigerator', 'shoe-rack', 'sink', 'sofa', 'staircase', 'stove', 'table', 'tv', 'wall-art', 'washing-machine', and 'window'."
+        android:text="03 - The permissible object categories are 'bed', 'bookshelf', 'chair', 'clothesrack', 'coffeetable', 'commode', 'cupboard', 'door', 'dressingtable', 'lamp', 'oven', 'pantrycupboards', 'refrigerator', 'shoerack', 'sink', 'sofa', 'staircase', 'stove', 'table', 'tv', 'wallart', 'washingmachine', and 'window'."
         android:textColorLink="#000000"
         android:textSize="16sp"
         android:textStyle="bold|italic"
